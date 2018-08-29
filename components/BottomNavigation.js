@@ -13,17 +13,20 @@ export default class BottomNavigator extends React.Component {
           onPress={() => this.props.routes.navigate("Home")}
           name="home"
           color="#ffffff"
+          underlayColor={"rgba(0,0,0,0)"}
         />
         <Icon
           onPress={() => this.props.routes.navigate("Settings")}
           name="settings"
           color="#ffffff"
+          underlayColor={"rgba(0,0,0,0)"}
         />
         <Icon
           onPress={() => this.props.routes.navigate("Profile")}
           name="user-circle-o"
           type="font-awesome"
           color="#ffffff"
+          underlayColor={"rgba(0,0,0,0)"}
         />
       </View>
     );

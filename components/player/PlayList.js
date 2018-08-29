@@ -11,7 +11,7 @@ const PlayList = props => {
           return (
             <TouchableOpacity
               key={item.key}
-              onPress={() => props.playThisSong(item.fileName)}
+              onPress={() => props.playThisSong(item)}
             >
               <PlayListItem
                 key={item.key}

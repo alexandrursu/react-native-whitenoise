@@ -9,8 +9,9 @@ export default class PlayListItem extends React.Component {
     super(props);
   }
   isThisActive = item => {
-    console.log(item === this.props.currentSong);
-    return item === this.props.currentSong && this.props.playing ? "true" : "";
+    return item === this.props.currentSong.fileName && this.props.playing
+      ? "true"
+      : "";
   };
   render() {
     return (
@@ -70,7 +71,7 @@ const styles = StyleSheet.create({
     display: "flex",
     paddingTop: 10,
     paddingBottom: 10,
-    borderBottomWidth: 1,
+    borderBottomWidth: 0.5,
     borderBottomColor: "rgba(255,255,255,0.3)",
     width: "100%",
     justifyContent: "space-between",

@@ -3,7 +3,7 @@ import { ImageBackground, StyleSheet, View } from "react-native";
 import Mountain from "../assets/images/mountain.jpeg";
 import LinearGradient from "react-native-linear-gradient";
 import BottomNavigation from "./BottomNavigation";
-import Mock from "./_mock";
+import Login from "./profile/Login";
 
 export default class Profile extends React.Component {
   static navigationOptions = {
@@ -30,7 +30,7 @@ export default class Profile extends React.Component {
               locations={[0, 1]}
               style={styles.linearGradient}
             >
-              <Mock />
+              <Login />
               <BottomNavigation routes={this.props.navigation} />
             </LinearGradient>
           </View>

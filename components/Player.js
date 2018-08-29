@@ -1,7 +1,6 @@
 import React from "react";
 import { Animated, Easing, StyleSheet, Text, View } from "react-native";
 import Switch from "react-native-switch-pro";
-
 import Sound from "react-native-sound";
 import PlayList from "./player/PlayList";
 import PlayButton from "./player/PlayButton";
@@ -32,44 +31,24 @@ export default class Player extends React.Component {
           key: 3,
           fileName: "spring-river.mp3",
           name: "Spring River",
-          duration: 60.53
-        },
-        {
-          key: 4,
-          fileName: "white-noise.mp3",
-          name: "White Noise",
-          duration: 601
-        },
-        {
-          key: 5,
-          fileName: "spring-river.mp3",
-          name: "Spring River",
-          duration: 60.53
-        },
-        {
-          key: 6,
-          fileName: "white-noise.mp3",
-          name: "White Noise",
-          duration: 601
-        },
-        {
-          key: 7,
-          fileName: "spring-river.mp3",
-          name: "Spring River",
-          duration: 60.53
+          duration: 60.47
         }
       ],
-      percentage: 0,
-      currentSong: "white-noise.mp3",
+      currentTime: 0,
+      currentPercentage: 0,
+      counter: 0,
+      currentSong: {
+        key: 2,
+        fileName: "white-noise.mp3",
+        name: "White Noise",
+        duration: 601
+      },
       sound: null,
       canvasAnimating: false,
-      spinValue: new Animated.Value(0) // Initial value for opacity: 0
+      spinValue: new Animated.Value(0)
     };
   }
 
-  handleChange = name => event => {
-    this.setState({ [name]: event.target.checked });
-  };
   animateInfinite = () => {
     this.state.spinValue.setValue(0);
 
@@ -94,43 +73,40 @@ export default class Player extends React.Component {
     });
   };
 
-  getCurrentPercentage = () => {
-    console.log("precentage started");
-    let duration = this.state.sounds[0].duration;
-    let onePercent = Math.round(duration / 100);
-    let counter = 0;
-
-    setInterval(
-      function() {
-        this.setState({
-          percentage: counter++
-        });
-      }.bind(this),
-      onePercent * 1000
-    );
-  };
-
   playThisSong = song => {
     return new Promise((resolve, reject) => {
-      if (typeof song === "undefined") {
+      let fileName = song.fileName;
+      if (typeof fileName === "undefined") {
+        console.log("======== fired udefined ========");
         return reject("undefined");
       }
-      if (song === this.state.currentSong && this.state.playing) {
+      if (fileName === this.state.currentSong.fileName && this.state.playing) {
+        console.log("======== fired pause ========");
         this.pause();
         return resolve("paused");
-      } else if (song === this.state.currentSong && this.state.paused) {
+      } else if (
+        fileName === this.state.currentSong.fileName &&
+        this.state.paused
+      ) {
+        console.log("======== fired resume ========");
         this.resume();
         if (!this.state.canvasAnimating) {
           this.animateInfinite();
         }
-      } else if (song !== this.state.currentSong && this.state.playing) {
+      } else if (
+        fileName !== this.state.currentSong.fileName &&
+        this.state.playing
+      ) {
+        console.log("======== fired stop ========");
         this.stop(song);
+        // Stop Percentage
       } else {
         if (!this.state.canvasAnimating) {
+          // Reset percentage
           this.animateInfinite();
         }
-        this.playSound(song);
-
+        console.log("======== fired play ========");
+        this.play(song);
         return Promise.resolve("good");
       }
     }).catch(err => {
@@ -158,66 +134,128 @@ export default class Player extends React.Component {
   stop = song => {
     console.log("stop song!");
     this.state.sound.stop(() => {
-      this.playSound(song);
+      this.play(song);
     });
   };
 
   // Method which triggers play action
-  playSound = item => {
-    this.state.sound = new Sound(item, Sound.MAIN_BUNDLE, error => {
+  play = song => {
+    console.log("=======play song========");
+    console.log(song.fileName);
+    this.state.sound = new Sound(song.fileName, Sound.MAIN_BUNDLE, error => {
       if (error !== null) {
         console.log(error);
       }
     });
 
     if (!this.state.playing) {
+      this.tickInterval = setInterval(() => {
+        this.tick();
+      }, 1000);
       setTimeout(() => {
-        console.log(item);
+        console.log(song);
 
         this.state.sound.play(success => {
-          console.log(success);
+          if (success) {
+            console.log("here");
+            if (this.tickInterval) {
+              clearInterval(this.tickInterval);
+              this.tickInterval = null;
+            }
+          } else {
+            if (this.tickInterval) {
+              clearInterval(this.tickInterval);
+              this.tickInterval = null;
+            }
+            console.log("error");
+          }
         });
 
         this.setState({
           playing: true,
-          currentSong: item
+          currentSong: song
         });
-        this.state.sound.getCurrentTime(seconds =>
-          console.log("at " + seconds)
-        );
-        this.getCurrentPercentage();
+
+        // this.getCurrentPercentage();
       }, 100);
-    } else if (item !== this.state.currentSong && this.state.playing) {
+      // this.state.sound.getCurrentTime(seconds => console.log("at " + seconds));
+    } else if (
+      song.fileName !== this.state.currentSong.fileName &&
+      this.state.playing
+    ) {
+      this.tickInterval = setInterval(() => {
+        this.tick();
+      }, 1000);
+
       this.setState({
-        currentSong: item
+        currentSong: song,
+        percentage: 0
       });
       console.log("new song!");
       setTimeout(() => {
-        console.log(item);
-
         this.state.sound.play(success => {
-          console.log(success);
+          if (success) {
+            console.log("here");
+            if (this.tickInterval) {
+              clearInterval(this.tickInterval);
+              this.tickInterval = null;
+            }
+          } else {
+            if (this.tickInterval) {
+              clearInterval(this.tickInterval);
+              this.tickInterval = null;
+            }
+            console.log("error");
+          }
         });
       }, 100);
     }
   };
+  tick() {
+    this.state.sound.getCurrentTime(seconds => {
+      if (this.tickInterval) {
+        this.setState({
+          currentTime: seconds,
+          currentPercentage: Math.round(
+            Math.ceil(seconds) * (100 / this.state.currentSong.duration)
+          )
+        });
+        if (this.state.currentPercentage >= 100) {
+          this.playNext();
+        }
+      }
+    });
+  }
 
+  playNext = () => {
+    this.state.sound.stop(() => {
+      console.log("play next");
+    });
+    this.setState({
+      playing: false,
+      currentSong: {},
+      currentPercentage: 0
+    });
+  };
   render() {
     return (
       <View style={styles.player}>
-        {/*<View style={styles.smartFeature}>*/}
-        {/*<Text style={styles.textStyle}>Smart: </Text>*/}
-        {/*<Switch value={this.state.checkedA} />*/}
-        {/*</View>*/}
-        {/*<Icon name="voice" type="material-community" color="#ffffff" />*/}
+        <View style={styles.smartFeature}>
+          <Text style={styles.textStyle}>Smart: </Text>
+          <Switch value={this.state.checkedA} />
+        </View>
+        <Icon name="voice" type="material-community" color="#ffffff" />
         <PlayButton
-          currentSong={this.state.sounds[0].fileName}
-          playSound={this.playSound.bind(this)}
+          currentSong={this.state.sounds[0]}
+          play={this.play.bind(this)}
           playing={this.state.playing}
-          percentage={this.state.percentage}
+          percentage={this.state.currentPercentage}
           spinValue={this.state.spinValue}
           playThisSong={this.playThisSong.bind(this)}
         />
+        <Text>{this.state.currentTime}</Text>
+        <Text>{this.state.currentPercentage}%</Text>
+
         {/*<Icon name="magic" type="font-awesome" color="#ffffff" />*/}
         <PlayList
           sounds={this.state.sounds}

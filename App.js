@@ -20,9 +20,7 @@ class Home extends React.Component {
       borderBottomColor: "transparent"
     },
     headerTintColor: "#fff",
-    headerTitleStyle: {
-      fontWeight: "100"
-    }
+    headerTitleStyle: {}
   };
 
   render() {
