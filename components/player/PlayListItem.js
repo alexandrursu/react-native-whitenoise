@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     display: "flex",
     paddingTop: 10,
     paddingBottom: 10,
-    borderBottomWidth: 0.5,
+    borderBottomWidth: 1,
     borderBottomColor: "rgba(255,255,255,0.3)",
     width: "100%",
     justifyContent: "space-between",

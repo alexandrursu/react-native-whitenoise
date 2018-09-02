@@ -5,7 +5,9 @@ import PlayListItem from "./PlayListItem";
 const PlayList = props => {
   return (
     <View style={styles.musicList}>
-      <View style={styles.separator} />
+      <View style={styles.separator}>
+        <View style={styles.separatorBar} />
+      </View>
       <ScrollView>
         {props.sounds.map(item => {
           return (
@@ -34,14 +36,25 @@ const styles = StyleSheet.create({
   musicList: {
     display: "flex",
     width: "100%",
-    height: "50%",
-    overflow: "scroll"
+    height: "60%",
+    overflow: "scroll",
+    marginTop: 25
   },
   separator: {
     marginTop: 0,
     height: "3%",
     width: "100%",
-    backgroundColor: "rgba(255,255,255,0.3)"
+    backgroundColor: "rgba(255,255,255,0.3)",
+    display: "flex",
+    alignItems: "center",
+    alignContent: "center",
+    justifyContent: "center"
+  },
+  separatorBar: {
+    marginTop: 0,
+    height: 2,
+    width: "15%",
+    backgroundColor: "rgba(255,255,255,0.8)"
   }
 });
 

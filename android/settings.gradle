@@ -1,4 +1,6 @@
 rootProject.name = 'whitenoise'
+include ':react-native-sound-level'
+project(':react-native-sound-level').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-sound-level/android')
 include ':react-native-audio'
 project(':react-native-audio').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-audio/android')
 include ':react-native-vector-icons'

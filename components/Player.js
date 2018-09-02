@@ -5,6 +5,8 @@ import Sound from "react-native-sound";
 import PlayList from "./player/PlayList";
 import PlayButton from "./player/PlayButton";
 import { Icon } from "react-native-elements";
+import { songs } from "../config";
+import RNSoundLevel from "react-native-sound-level";
 
 export default class Player extends React.Component {
   constructor(props) {
@@ -14,26 +16,7 @@ export default class Player extends React.Component {
       paused: false,
       checkedA: false,
       checkedB: true,
-      sounds: [
-        {
-          key: 1,
-          fileName: "okean-elzy-obiymy.mp3",
-          name: "Okean Elzy Obiymy",
-          duration: 239.65
-        },
-        {
-          key: 2,
-          fileName: "white-noise.mp3",
-          name: "White Noise",
-          duration: 601
-        },
-        {
-          key: 3,
-          fileName: "spring-river.mp3",
-          name: "Spring River",
-          duration: 60.47
-        }
-      ],
+      sounds: songs,
       currentTime: 0,
       currentPercentage: 0,
       counter: 0,
@@ -48,7 +31,20 @@ export default class Player extends React.Component {
       spinValue: new Animated.Value(0)
     };
   }
-
+  componentDidMount() {
+    RNSoundLevel.start();
+    RNSoundLevel.onNewFrame = data => {
+      // see "Returned data" section below
+      console.log("Sound level info", data);
+      if (data.value > 0 && !this.state.playing) {
+        this.play(this.state.currentSong);
+      }
+    };
+  }
+  // don't forget to stop it
+  componentWillUnmount() {
+    RNSoundLevel.stop();
+  }
   animateInfinite = () => {
     this.state.spinValue.setValue(0);
 
@@ -240,11 +236,10 @@ export default class Player extends React.Component {
   render() {
     return (
       <View style={styles.player}>
-        <View style={styles.smartFeature}>
-          <Text style={styles.textStyle}>Smart: </Text>
-          <Switch value={this.state.checkedA} />
+        <View style={styles.layerTop}>
+          <Icon name="wifi" type="FontAwesome5" iconStyle={styles.iconSignal} />
+          <Icon name="child-friendly" color="#fff" iconStyle={styles.icon} />
         </View>
-        <Icon name="voice" type="material-community" color="#ffffff" />
         <PlayButton
           currentSong={this.state.sounds[0]}
           play={this.play.bind(this)}
@@ -253,10 +248,7 @@ export default class Player extends React.Component {
           spinValue={this.state.spinValue}
           playThisSong={this.playThisSong.bind(this)}
         />
-        <Text>{this.state.currentTime}</Text>
-        <Text>{this.state.currentPercentage}%</Text>
-
-        {/*<Icon name="magic" type="font-awesome" color="#ffffff" />*/}
+        <Icon name="stopwatch" type="entypo" color="#ffffff" />
         <PlayList
           sounds={this.state.sounds}
           currentSong={this.state.currentSong}
@@ -299,6 +291,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignContent: "center",
     padding: 20,
-    paddingTop: 0
+    paddingTop: 20
+  },
+  iconSignal: {
+    fontSize: 11,
+    height: 11,
+    position: "absolute",
+    top: 1,
+    left: 3,
+    transform: [{ rotate: "-45deg" }],
+    color: "rgba(255,255,255,0.7)"
   }
 });

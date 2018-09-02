@@ -76,14 +76,14 @@ export default class PlayButton extends React.Component {
                 <View style={styles.playIcon}>
                   <Icon
                     name={this.props.playing ? "pause" : "play-arrow"}
-                    color="#ffffff"
+                    color="#fff"
                   />
                 </View>
               </ProgressCircle>
             </View>
           </Animated.View>
         </TouchableOpacity>
-        <Icon name="replay" color="#ffffff" type="material-community" />
+        <Icon name="infinity" type="entypo" color="#ffffff" />
       </View>
     );
   }
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-evenly",
     width: "100%",
-    height: "50%"
+    height: "30%"
   },
   playBtn: {
     width: 100,
@@ -105,7 +105,8 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     alignContent: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    marginBottom: 10
   },
   icon: {},
   textStyle: {
@@ -136,7 +137,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignContent: "center",
     justifyContent: "center",
-    borderWidth: 1,
+    borderWidth: 0.5,
     borderColor: "#fff",
     borderRadius: 35,
     height: 35,
