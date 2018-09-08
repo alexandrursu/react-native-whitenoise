@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, ScrollView, TouchableOpacity } from "react-native";
+import { StyleSheet, View, ScrollView } from "react-native";
 import PlayListItem from "./PlayListItem";
 
 const PlayList = props => {
@@ -11,20 +11,19 @@ const PlayList = props => {
       <ScrollView>
         {props.sounds.map(item => {
           return (
-            <TouchableOpacity
+            <PlayListItem
               key={item.key}
-              onPress={() => props.playThisSong(item)}
-            >
-              <PlayListItem
-                key={item.key}
-                num={item.key}
-                name={item.name}
-                fileName={item.fileName}
-                duration={item.duration}
-                playing={props.playing}
-                currentSong={props.currentSong}
-              />
-            </TouchableOpacity>
+              num={item.key}
+              item={item}
+              name={item.name}
+              fileName={item.fileName}
+              favoriteSong={props.favoriteSong}
+              storeFavorite={song => props.storeFavorite(song)}
+              duration={item.duration}
+              playing={props.playing}
+              currentSong={props.currentSong}
+              playThisSong={item => props.playThisSong(item)}
+            />
           );
         })}
       </ScrollView>
@@ -36,7 +35,7 @@ const styles = StyleSheet.create({
   musicList: {
     display: "flex",
     width: "100%",
-    height: "60%",
+    height: "50%",
     overflow: "scroll",
     marginTop: 25
   },

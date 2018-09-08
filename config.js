@@ -1,45 +1,33 @@
 export const songs = [
   {
     key: 1,
-    fileName: "okean-elzy-obiymy.mp3",
-    name: "Okean Elzy Obiymy",
-    duration: 239.65
+    fileName: "white-noise.mp3",
+    name: "White Noise Baby Sleep",
+    duration: 601
   },
   {
     key: 2,
-    fileName: "white-noise.mp3",
-    name: "White Noise",
-    duration: 601
+    fileName: "spring-river.mp3",
+    name: "Spring River Sound",
+    duration: 60.52
   },
   {
     key: 3,
-    fileName: "spring-river.mp3",
-    name: "Spring River",
-    duration: 60.47
-  },
-  {
-    key: 4,
-    fileName: "okean-elzy-obiymy.mp3",
-    name: "Okean Elzy Obiymy",
+    fileName: "exhaust-hood.mp3",
+    name: "The Kitchen Hood",
     duration: 239.65
   },
   {
-    key: 5,
-    fileName: "white-noise.mp3",
-    name: "White Noise",
+    key: 4,
+    fileName: "relaxing-shower.mp3",
+    name: "Relaxing Shower Sound",
     duration: 601
   },
   {
-    key: 6,
-    fileName: "spring-river.mp3",
-    name: "Spring River",
-    duration: 60.47
-  },
-  {
-    key: 7,
-    fileName: "spring-river.mp3",
-    name: "Spring River",
-    duration: 60.47
+    key: 5,
+    fileName: "water-tap-running.mp3",
+    name: "Running Water White Noise",
+    duration: 239.65
   }
 ];
 
@@ -56,9 +44,10 @@ export const settings = [
   },
   {
     key: 4,
-    name: "Auto Stop Timer",
-    setting: "infinitePlaying",
+    name: "Stop Playing in 20 min",
+    setting: "autoStop",
     value: false,
+    duration: 20000, //seconds
     icon: {
       name: "stopwatch",
       type: "entypo"
@@ -68,7 +57,7 @@ export const settings = [
     key: 2,
     name: "Auto Play on Start",
     setting: "autoPLay",
-    value: true,
+    value: false,
     icon: {
       name: "playlist-play",
       type: "material"
@@ -85,3 +74,17 @@ export const settings = [
     }
   }
 ];
+
+export const defaultCurrent = {
+  key: 1,
+  fileName: "white-noise.mp3",
+  name: "White Noise",
+  duration: 601
+};
+
+export const defaultFavorite = {
+  key: 1,
+  fileName: "",
+  name: "",
+  duration: 0
+};

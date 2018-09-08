@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Text, View, StyleSheet, Animated } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import { Icon } from "react-native-elements";
 import { fancyTimeFormat } from "../../helpers/helpers";
 
@@ -22,30 +22,60 @@ export default class PlayListItem extends React.Component {
             : styles.song
         }
       >
-        <View style={styles.leftContent}>
-          <View
-            style={
-              this.isThisActive(this.props.fileName)
-                ? styles.iconPause
-                : styles.iconPlay
-            }
-          >
-            <Icon
-              size={18}
-              name={
-                this.isThisActive(this.props.fileName) ? "pause" : "play-arrow"
+        <TouchableOpacity
+          onPress={() => this.props.playThisSong(this.props.item)}
+        >
+          <View style={styles.leftContent}>
+            <View
+              style={
+                this.isThisActive(this.props.fileName)
+                  ? styles.iconPause
+                  : styles.iconPlay
               }
-              color={
-                this.isThisActive(this.props.fileName) ? "#73f8c9" : "#fff"
-              }
-            />
+            >
+              <Icon
+                size={18}
+                name={
+                  this.isThisActive(this.props.fileName)
+                    ? "pause"
+                    : "play-arrow"
+                }
+                color={
+                  this.isThisActive(this.props.fileName) ? "#73f8c9" : "#fff"
+                }
+              />
+            </View>
+            <Text style={styles.textStyle}>{this.props.name}</Text>
           </View>
-          <Text style={styles.textStyle}>{this.props.name}</Text>
-        </View>
+        </TouchableOpacity>
 
-        <Text style={styles.duration}>
-          {fancyTimeFormat(this.props.duration)}
-        </Text>
+        <Icon
+          name={
+            this.props.fileName === this.props.favoriteSong.fileName
+              ? "favorite"
+              : "heart"
+          }
+          color={
+            this.props.fileName === this.props.favoriteSong.fileName
+              ? "#73f8c9"
+              : "#fff"
+          }
+          type={
+            this.props.fileName === this.props.favoriteSong.fileName
+              ? "material"
+              : "evilicon"
+          }
+          iconStyle={
+            this.props.fileName === this.props.favoriteSong.fileName
+              ? styles.iconSmall
+              : styles.icon
+          }
+          onPress={() => this.props.storeFavorite(this.props.item)}
+          underlayColor={"rgba(0,0,0,0)"}
+        />
+        {/*<Text style={styles.duration}>*/}
+        {/*{fancyTimeFormat(this.props.duration)}*/}
+        {/*</Text>*/}
       </View>
     );
   }
@@ -121,6 +151,14 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     flexDirection: "row",
     alignItems: "center"
+  },
+  icon: {
+    top: 2
+  },
+  iconSmall: {
+    top: 2,
+    right: 2,
+    fontSize: 20
   }
 });
 

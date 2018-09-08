@@ -25,9 +25,11 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
-		152A0714212CDD500039A3B2 /* spring-river.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 152A06E9212CDD500039A3B2 /* spring-river.mp3 */; };
+		152DA66B214365D100D3F57D /* relaxing-shower.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 152DA667214365D000D3F57D /* relaxing-shower.mp3 */; };
+		152DA66C214365D100D3F57D /* exhaust-hood.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 152DA668214365D000D3F57D /* exhaust-hood.mp3 */; };
+		152DA66D214365D100D3F57D /* spring-river.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 152DA669214365D000D3F57D /* spring-river.mp3 */; };
+		152DA66E214365D100D3F57D /* water-tap-running.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 152DA66A214365D100D3F57D /* water-tap-running.mp3 */; };
 		153FC68320E1F32C002D5F82 /* white-noise.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 153FC68220E1F32C002D5F82 /* white-noise.mp3 */; };
-		159A229A2126839200CFDCA9 /* okean-elzy-obiymy.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 159A226F2126839200CFDCA9 /* okean-elzy-obiymy.mp3 */; };
 		18EE9065488B4363816C7F27 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 909FD1A681F8407B856F02D4 /* Zocial.ttf */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
@@ -399,9 +401,11 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = whitenoise/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = whitenoise/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
-		152A06E9212CDD500039A3B2 /* spring-river.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "spring-river.mp3"; sourceTree = "<group>"; };
+		152DA667214365D000D3F57D /* relaxing-shower.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "relaxing-shower.mp3"; path = "../assets/sounds/relaxing-shower.mp3"; sourceTree = "<group>"; };
+		152DA668214365D000D3F57D /* exhaust-hood.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "exhaust-hood.mp3"; path = "../assets/sounds/exhaust-hood.mp3"; sourceTree = "<group>"; };
+		152DA669214365D000D3F57D /* spring-river.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "spring-river.mp3"; path = "../assets/sounds/spring-river.mp3"; sourceTree = "<group>"; };
+		152DA66A214365D100D3F57D /* water-tap-running.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "water-tap-running.mp3"; path = "../assets/sounds/water-tap-running.mp3"; sourceTree = "<group>"; };
 		153FC68220E1F32C002D5F82 /* white-noise.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "white-noise.mp3"; sourceTree = "<group>"; };
-		159A226F2126839200CFDCA9 /* okean-elzy-obiymy.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "okean-elzy-obiymy.mp3"; sourceTree = "<group>"; };
 		19A48CA7E6D34730A3CFFAD1 /* libBVLinearGradient.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libBVLinearGradient.a; sourceTree = "<group>"; };
 		24C2E9347D9E4918BAF5E136 /* RNAudio.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNAudio.xcodeproj; path = "../node_modules/react-native-audio/ios/RNAudio.xcodeproj"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* whitenoise-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "whitenoise-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -670,9 +674,11 @@
 		4B4310CBA1154E90AAF2599E /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				152A06E9212CDD500039A3B2 /* spring-river.mp3 */,
-				159A226F2126839200CFDCA9 /* okean-elzy-obiymy.mp3 */,
 				153FC68220E1F32C002D5F82 /* white-noise.mp3 */,
+				152DA668214365D000D3F57D /* exhaust-hood.mp3 */,
+				152DA667214365D000D3F57D /* relaxing-shower.mp3 */,
+				152DA669214365D000D3F57D /* spring-river.mp3 */,
+				152DA66A214365D100D3F57D /* water-tap-running.mp3 */,
 				A716A990A149497298C5283F /* Entypo.ttf */,
 				2FAFF024E35D4B80B3B7AE0F /* EvilIcons.ttf */,
 				F5C51FA9FF3542F092340330 /* Feather.ttf */,
@@ -1285,12 +1291,14 @@
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				C0F63424C058438DAEB2E1F5 /* Entypo.ttf in Resources */,
 				153FC68320E1F32C002D5F82 /* white-noise.mp3 in Resources */,
+				152DA66E214365D100D3F57D /* water-tap-running.mp3 in Resources */,
 				C6EC24BDC6FE4BA88B9D3B09 /* EvilIcons.ttf in Resources */,
-				159A229A2126839200CFDCA9 /* okean-elzy-obiymy.mp3 in Resources */,
-				152A0714212CDD500039A3B2 /* spring-river.mp3 in Resources */,
 				2F4ADF0E102243CCA3AFDE14 /* Feather.ttf in Resources */,
 				CF08D5D1B9ED4E26B55C04CD /* FontAwesome.ttf in Resources */,
+				152DA66C214365D100D3F57D /* exhaust-hood.mp3 in Resources */,
 				FE6ABAE081814B49B6B3B61B /* Foundation.ttf in Resources */,
+				152DA66D214365D100D3F57D /* spring-river.mp3 in Resources */,
+				152DA66B214365D100D3F57D /* relaxing-shower.mp3 in Resources */,
 				0AC93999A0B24BEAA035B84D /* Ionicons.ttf in Resources */,
 				41D0AEB50DC34EEF846E33F6 /* MaterialCommunityIcons.ttf in Resources */,
 				93C501B915EE444FA3269130 /* MaterialIcons.ttf in Resources */,

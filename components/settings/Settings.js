@@ -2,6 +2,7 @@ import React from "react";
 import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { settings } from "../../config";
 import SettingsItem from "./SettingsItem";
+import { AsyncStorage } from "react-native";
 
 export default class Settings extends React.Component {
   constructor(props) {
@@ -11,7 +12,7 @@ export default class Settings extends React.Component {
   render() {
     return (
       <View style={styles.containerTransparent}>
-        {settings.map(item => {
+        {this.props.settingsClone.map(item => {
           return (
             <SettingsItem
               key={item.key}
@@ -20,6 +21,7 @@ export default class Settings extends React.Component {
               value={item.value}
               iconName={item.icon.name}
               type={item.icon.type}
+              storeSettings={data => this.props.storeSettings(data)}
             />
           );
         })}

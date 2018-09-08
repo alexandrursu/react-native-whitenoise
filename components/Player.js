@@ -1,11 +1,19 @@
 import React from "react";
-import { Animated, Easing, StyleSheet, Text, View } from "react-native";
-import Switch from "react-native-switch-pro";
+import {
+  Animated,
+  AsyncStorage,
+  Easing,
+  StyleSheet,
+  View,
+  Text
+} from "react-native";
 import Sound from "react-native-sound";
+// Enable playback in silence mode
+// Sound.setCategory("Playback");
 import PlayList from "./player/PlayList";
 import PlayButton from "./player/PlayButton";
-import { Icon } from "react-native-elements";
-import { songs } from "../config";
+import { defaultCurrent, defaultFavorite, songs } from "../config";
+import { fancyTimeFormat } from "../helpers/helpers";
 import RNSoundLevel from "react-native-sound-level";
 
 export default class Player extends React.Component {
@@ -20,31 +28,79 @@ export default class Player extends React.Component {
       currentTime: 0,
       currentPercentage: 0,
       counter: 0,
-      currentSong: {
-        key: 2,
-        fileName: "white-noise.mp3",
-        name: "White Noise",
-        duration: 601
-      },
+      currentSong: defaultCurrent,
+      favoriteSong: defaultFavorite,
       sound: null,
       canvasAnimating: false,
       spinValue: new Animated.Value(0)
     };
+    console.log("========current from favorite==========");
+    console.log(this.state.currentSong);
   }
   componentDidMount() {
+    this.retrieveFavorite();
     RNSoundLevel.start();
     RNSoundLevel.onNewFrame = data => {
       // see "Returned data" section below
-      console.log("Sound level info", data);
-      if (data.value > 0 && !this.state.playing) {
+      // console.log("Sound level info", data);
+      if (
+        data.value > 0 &&
+        !this.state.playing &&
+        this.props.settingsClone[0].value
+      ) {
         this.play(this.state.currentSong);
       }
     };
+
+    // Auto start when starting application, as retrieveSettings is async method we need to put
+    setTimeout(() => {
+      if (
+        this.props.settingsClone[2].value &&
+        this.state.currentSong.fileName !== ""
+      ) {
+        console.log("fire auto play");
+        this.play(this.state.currentSong);
+      }
+    }, 2000);
   }
+
+  componentWillReceiveProps() {}
+
   // don't forget to stop it
   componentWillUnmount() {
     RNSoundLevel.stop();
   }
+
+  retrieveFavorite = () => {
+    AsyncStorage.getItem("favorite").then(data => {
+      const value = JSON.parse(data);
+      if (value !== null) {
+        // We have data!!
+        console.log("===============Get favorite ============");
+        console.log(value);
+        this.setState({
+          currentSong: value,
+          favoriteSong: value
+        });
+      } else {
+        this.setState({
+          currentSong: defaultFavorite
+        });
+      }
+    });
+  };
+  storeFavorite = song => {
+    console.log("========favorite=========");
+    console.log(this.state.settingsClone);
+    console.log(song);
+
+    AsyncStorage.setItem("favorite", JSON.stringify(song)).then(() => {
+      console.log("favorite song changed");
+      this.setState({
+        favoriteSong: song
+      });
+    });
+  };
   animateInfinite = () => {
     this.state.spinValue.setValue(0);
 
@@ -68,6 +124,18 @@ export default class Player extends React.Component {
       canvasAnimating: false
     });
   };
+
+  setNumberOfLoops() {
+    setTimeout(() => {
+      let num = this.props.settingsClone[3].value ? -1 : 0;
+      // If -1 will loop indefinitely until stop() is called
+      if (this.state.playing) {
+        this.state.sound.setNumberOfLoops(num);
+        console.log("=========Loops========");
+        console.log(num);
+      }
+    });
+  }
 
   playThisSong = song => {
     return new Promise((resolve, reject) => {
@@ -134,26 +202,35 @@ export default class Player extends React.Component {
     });
   };
 
+  totalStop = song => {
+    console.log("total stop!");
+    this.state.sound.stop(() => {
+      this.setState({
+        playing: false
+      });
+    });
+  };
+
   // Method which triggers play action
   play = song => {
-    console.log("=======play song========");
-    console.log(song.fileName);
+    console.log("=======play song========" + song.fileName);
     this.state.sound = new Sound(song.fileName, Sound.MAIN_BUNDLE, error => {
-      if (error !== null) {
-        console.log(error);
+      if (error) {
+        console.log("failed to load the sound", error);
+        return;
       }
     });
+    console.log(this.state.sound);
 
     if (!this.state.playing) {
       this.tickInterval = setInterval(() => {
         this.tick();
       }, 1000);
       setTimeout(() => {
-        console.log(song);
-
         this.state.sound.play(success => {
           if (success) {
-            console.log("here");
+            console.log("successfully finished playing");
+            this.totalStop();
             if (this.tickInterval) {
               clearInterval(this.tickInterval);
               this.tickInterval = null;
@@ -163,7 +240,7 @@ export default class Player extends React.Component {
               clearInterval(this.tickInterval);
               this.tickInterval = null;
             }
-            console.log("error");
+            console.log("error1");
           }
         });
 
@@ -171,6 +248,7 @@ export default class Player extends React.Component {
           playing: true,
           currentSong: song
         });
+        this.setNumberOfLoops();
 
         // this.getCurrentPercentage();
       }, 100);
@@ -191,7 +269,9 @@ export default class Player extends React.Component {
       setTimeout(() => {
         this.state.sound.play(success => {
           if (success) {
-            console.log("here");
+            console.log("successfully finished playing");
+            this.totalStop();
+
             if (this.tickInterval) {
               clearInterval(this.tickInterval);
               this.tickInterval = null;
@@ -201,7 +281,7 @@ export default class Player extends React.Component {
               clearInterval(this.tickInterval);
               this.tickInterval = null;
             }
-            console.log("error");
+            console.log("error2");
           }
         });
       }, 100);
@@ -216,9 +296,9 @@ export default class Player extends React.Component {
             Math.ceil(seconds) * (100 / this.state.currentSong.duration)
           )
         });
-        if (this.state.currentPercentage >= 100) {
-          this.playNext();
-        }
+        // if (this.state.currentPercentage >= 100) {
+        //   this.playNext();
+        // }
       }
     });
   }
@@ -237,22 +317,36 @@ export default class Player extends React.Component {
     return (
       <View style={styles.player}>
         <View style={styles.layerTop}>
-          <Icon name="wifi" type="FontAwesome5" iconStyle={styles.iconSignal} />
-          <Icon name="child-friendly" color="#fff" iconStyle={styles.icon} />
+          {/*<Icon*/}
+          {/*name="stopwatch"*/}
+          {/*type="entypo"*/}
+          {/*color={this.props.settingsClone[1].value ? "#00ffd1" : "#fff"}*/}
+          {/*onPress={() => this.props.storeSettings("autoStop")}*/}
+          {/*underlayColor={"rgba(0,0,0,0)"}*/}
+          {/*/>*/}
         </View>
         <PlayButton
-          currentSong={this.state.sounds[0]}
+          currentSong={this.state.currentSong}
           play={this.play.bind(this)}
           playing={this.state.playing}
           percentage={this.state.currentPercentage}
           spinValue={this.state.spinValue}
+          storeSettings={data => this.props.storeSettings(data)}
+          setNumberOfLoops={() => this.setNumberOfLoops()}
+          settingsClone={this.props.settingsClone}
           playThisSong={this.playThisSong.bind(this)}
         />
-        <Icon name="stopwatch" type="entypo" color="#ffffff" />
+        <Text style={styles.countDown}>
+          {fancyTimeFormat(
+            this.state.favoriteSong.duration - this.state.currentTime
+          )}
+        </Text>
         <PlayList
           sounds={this.state.sounds}
           currentSong={this.state.currentSong}
           playing={this.state.playing}
+          favoriteSong={this.state.favoriteSong}
+          storeFavorite={song => this.storeFavorite(song)}
           playThisSong={this.playThisSong.bind(this)}
         />
       </View>
@@ -261,14 +355,6 @@ export default class Player extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  smartFeature: {
-    display: "flex",
-    flexDirection: "row",
-    height: "10%",
-    marginBottom: -45,
-    alignSelf: "flex-end",
-    paddingRight: 10
-  },
   textStyle: {
     color: "#fff",
     zIndex: 1,
@@ -279,7 +365,18 @@ const styles = StyleSheet.create({
     textAlign: "center",
     top: 3
   },
-
+  countDown: {
+    color: "#fff",
+    zIndex: 1,
+    display: "flex",
+    alignItems: "center",
+    alignContent: "center",
+    justifyContent: "center",
+    textAlign: "center",
+    top: 3,
+    fontSize: 30,
+    fontWeight: "200"
+  },
   player: {
     display: "flex",
     flex: 1,
@@ -292,14 +389,5 @@ const styles = StyleSheet.create({
     alignContent: "center",
     padding: 20,
     paddingTop: 20
-  },
-  iconSignal: {
-    fontSize: 11,
-    height: 11,
-    position: "absolute",
-    top: 1,
-    left: 3,
-    transform: [{ rotate: "-45deg" }],
-    color: "rgba(255,255,255,0.7)"
   }
 });

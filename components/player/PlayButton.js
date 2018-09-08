@@ -9,6 +9,7 @@ import {
 import { Icon } from "react-native-elements";
 import CanvasImage from "./CanvasImage";
 import ProgressCircle from "react-native-progress-circle";
+import { settings } from "../../config";
 
 export default class PlayButton extends React.Component {
   constructor(props) {
@@ -19,6 +20,10 @@ export default class PlayButton extends React.Component {
     this.props.playThisSong(this.props.currentSong);
   }
 
+  continuousPlay() {
+    this.props.setNumberOfLoops();
+    this.props.storeSettings("continuousPlay");
+  }
   render() {
     const skewX = this.props.spinValue.interpolate({
       inputRange: [0, 1, 2, 3, 4],
@@ -37,12 +42,22 @@ export default class PlayButton extends React.Component {
 
     return (
       <View style={styles.playerTop}>
-        <Icon
-          name="favorite-border"
-          color="#ffffff"
-          type="material"
-          iconStyle={styles.icon}
-        />
+        <View style={styles.smartIconPlaceholder}>
+          <Icon
+            name="wifi"
+            type="FontAwesome5"
+            color={this.props.settingsClone[0].value ? "#73f8c9" : "#fff"}
+            iconStyle={styles.iconSignal}
+            underlayColor={"rgba(0,0,0,0)"}
+          />
+          <Icon
+            name="child-friendly"
+            color={this.props.settingsClone[0].value ? "#73f8c9" : "#fff"}
+            iconStyle={styles.icon}
+            onPress={() => this.props.storeSettings("smartFeature")}
+            underlayColor={"rgba(0,0,0,0)"}
+          />
+        </View>
         <TouchableOpacity
           style={styles.touchableOpacity}
           onPress={() => {
@@ -83,19 +98,38 @@ export default class PlayButton extends React.Component {
             </View>
           </Animated.View>
         </TouchableOpacity>
-        <Icon name="infinity" type="entypo" color="#ffffff" />
+        <Icon
+          name="infinity"
+          type="entypo"
+          color={this.props.settingsClone[3].value ? "#73f8c9" : "#fff"}
+          onPress={() => this.continuousPlay()}
+          underlayColor={"rgba(0,0,0,0)"}
+        />
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  smartIconPlaceholder: {
+    display: "flex",
+    height: 24,
+    alignSelf: "center"
+  },
+  iconSignal: {
+    fontSize: 10,
+    height: 10,
+    position: "absolute",
+    top: 0,
+    left: 3,
+    transform: [{ rotate: "-45deg" }]
+  },
   playerTop: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-evenly",
     width: "100%",
-    height: "30%"
+    height: "32%"
   },
   playBtn: {
     width: 100,

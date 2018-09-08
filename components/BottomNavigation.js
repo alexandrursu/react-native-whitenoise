@@ -5,27 +5,34 @@ import { Icon } from "react-native-elements";
 export default class BottomNavigator extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      active: props.routes.state.routeName
+    };
   }
+
+  changeRoute = route => {
+    this.props.routes.navigate(route);
+  };
   render() {
     return (
       <View style={styles.navigation}>
         <Icon
-          onPress={() => this.props.routes.navigate("Home")}
+          onPress={() => this.changeRoute("Home")}
           name="home"
-          color="#ffffff"
+          color={this.state.active === "Home" ? "#73f8c9" : "#ffffff"}
           underlayColor={"rgba(0,0,0,0)"}
         />
         <Icon
-          onPress={() => this.props.routes.navigate("Settings")}
+          onPress={() => this.changeRoute("Settings")}
           name="settings"
-          color="#ffffff"
+          color={this.state.active === "Settings" ? "#73f8c9" : "#ffffff"}
           underlayColor={"rgba(0,0,0,0)"}
         />
         <Icon
-          onPress={() => this.props.routes.navigate("Profile")}
+          onPress={() => this.changeRoute("Profile")}
           name="user-circle-o"
           type="font-awesome"
-          color="#ffffff"
+          color={this.state.active === "Profile" ? "#73f8c9" : "#ffffff"}
           underlayColor={"rgba(0,0,0,0)"}
         />
       </View>
@@ -41,6 +48,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     paddingLeft: 50,
     paddingRight: 50,
-    paddingBottom: 20
+    paddingBottom: 15
   }
 });

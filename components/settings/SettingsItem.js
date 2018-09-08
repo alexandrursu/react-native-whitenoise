@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { TouchableOpacity, StyleSheet, Text, View } from "react-native";
 import { Icon } from "react-native-elements";
 
 export default class SettingsItem extends React.Component {
@@ -8,11 +8,15 @@ export default class SettingsItem extends React.Component {
     this.state = {
       value: props.value
     };
+    console.log(props);
   }
 
   render() {
     return (
-      <View style={styles.placeholder}>
+      <TouchableOpacity
+        style={styles.placeholder}
+        onPress={data => this.props.storeSettings(this.props.setting)}
+      >
         <View style={styles.layerTop}>
           {this.props.setting === "smartFeature" ? (
             <Icon
@@ -26,14 +30,14 @@ export default class SettingsItem extends React.Component {
           <Icon
             name={this.props.iconName}
             type={this.props.type}
-            color={this.state.value ? "#fff" : "#fff"}
+            color="#fff"
             iconStyle={styles.icon}
           />
         </View>
         <View style={styles.layerMiddle}>
           <Text
             style={{
-              color: this.state.value ? "#fff" : "#fff",
+              color: "#fff",
               fontWeight: "600",
               textAlign: "center"
             }}
@@ -44,14 +48,14 @@ export default class SettingsItem extends React.Component {
         <View style={styles.layerBottom}>
           <Text
             style={{
-              color: this.state.value ? "#76FF03" : "#fff",
-              fontWeight: this.state.value ? "900" : "100"
+              color: this.props.value ? "#73f8c9" : "#fff",
+              fontWeight: this.props.value ? "900" : "100"
             }}
           >
             {this.props.value ? "On" : "Off"}
           </Text>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   }
 }
@@ -83,7 +87,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignContent: "center",
     justifyContent: "center",
-    textAlign: "center",
     width: "100%",
     height: 60
   },

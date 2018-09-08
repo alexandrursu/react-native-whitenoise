@@ -6,17 +6,9 @@ import BottomNavigation from "./BottomNavigation";
 import Settings from "./settings/Settings";
 
 export default class Setting extends React.Component {
-  static navigationOptions = {
-    title: "Settings",
-    headerStyle: {
-      backgroundColor: "rgba(3, 218, 198, 1)",
-      borderBottomColor: "transparent"
-    },
-    headerTintColor: "#fff",
-    headerTitleStyle: {
-      color: "#fff"
-    }
-  };
+  constructor(props) {
+    super(props);
+  }
 
   render() {
     return (
@@ -30,7 +22,12 @@ export default class Setting extends React.Component {
               locations={[0, 1]}
               style={styles.linearGradient}
             >
-              <Settings />
+              <Settings
+                settingsClone={this.props.screenProps.settingsClone}
+                storeSettings={data =>
+                  this.props.screenProps.storeSettings(data)
+                }
+              />
               <BottomNavigation routes={this.props.navigation} />
             </LinearGradient>
           </View>

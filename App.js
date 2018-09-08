@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View, ImageBackground } from "react-native";
+import { StyleSheet, View, ImageBackground, AsyncStorage } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import Mountain from "./assets/images/mountain.jpeg";
 import Player from "./components/Player";
@@ -7,22 +7,16 @@ import Profile from "./components/Profile";
 import Settings from "./components/Settings";
 import BottomNavigation from "./components/BottomNavigation";
 import { createStackNavigator } from "react-navigation";
+import { settings, favorite } from "./config";
+
+let settingsClone;
 
 class Home extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
-  }
-  static navigationOptions = {
-    title: "White Noise Smart",
-    headerStyle: {
-      backgroundColor: "rgba(3, 218, 198, 1)",
-      borderBottomColor: "transparent"
-    },
-    headerTintColor: "#fff",
-    headerTitleStyle: {}
-  };
 
+    console.log(props);
+  }
   render() {
     return (
       <View style={styles.main}>
@@ -35,7 +29,16 @@ class Home extends React.Component {
               locations={[0, 1]}
               style={styles.linearGradient}
             >
-              <Player />
+              <Player
+                favoriteSong={this.props.screenProps.favoriteSong}
+                settingsClone={this.props.screenProps.settingsClone}
+                storeSettings={data =>
+                  this.props.screenProps.storeSettings(data)
+                }
+                storeFavorite={data =>
+                  this.props.screenProps.storeFavorite(data)
+                }
+              />
               <BottomNavigation routes={this.props.navigation} />
             </LinearGradient>
           </View>
@@ -47,8 +50,32 @@ class Home extends React.Component {
 
 const RootStack = createStackNavigator(
   {
-    Home: Home,
-    Settings: Settings,
+    Home: {
+      screen: props => <Home {...props} />,
+      navigationOptions: {
+        title: "White Noise: Smart Sleep",
+        headerStyle: {
+          backgroundColor: "rgba(3, 218, 198, 1)",
+          borderBottomColor: "transparent"
+        },
+        headerTintColor: "#fff",
+        headerTitleStyle: {}
+      }
+    },
+    Settings: {
+      screen: props => <Settings {...props} />,
+      navigationOptions: {
+        title: "Settings",
+        headerStyle: {
+          backgroundColor: "rgba(3, 218, 198, 1)",
+          borderBottomColor: "transparent"
+        },
+        headerTintColor: "#fff",
+        headerTitleStyle: {
+          color: "#fff"
+        }
+      }
+    },
     Profile: Profile
   },
   {
@@ -57,8 +84,61 @@ const RootStack = createStackNavigator(
 );
 
 export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      settingsClone: settings
+    };
+  }
+  componentDidMount() {
+    this.retrieveSettings();
+  }
+
+  storeSettings = setting => {
+    console.log("========clone=========");
+    console.log(this.state.settingsClone);
+    console.log(setting);
+    settingsClone = this.state.settingsClone.map(item => {
+      item.setting === setting ? (item.value = !item.value) : "";
+      return item;
+    });
+
+    AsyncStorage.setItem("settings", JSON.stringify(settingsClone)).then(() => {
+      this.setState({
+        settingsClone: settingsClone
+      });
+    });
+  };
+
+  retrieveSettings = () => {
+    AsyncStorage.getItem("settings").then(data => {
+      const value = JSON.parse(data);
+
+      if (value !== null) {
+        // We have data!!
+        console.log("===============Get settings ============");
+        console.log(value);
+        this.setState({
+          settingsClone: value
+        });
+      } else {
+        this.setState({
+          settingsClone: settings
+        });
+      }
+    });
+  };
+
   render() {
-    return <RootStack />;
+    return (
+      <RootStack
+        screenProps={{
+          settingsClone: this.state.settingsClone,
+          storeSettings: data => this.storeSettings(data)
+        }}
+      />
+    );
   }
 }
 
