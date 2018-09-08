@@ -1,5 +1,6 @@
 import React from "react";
 import { Button, StyleSheet, TextInput, View } from "react-native";
+import { constants } from "../../helpers/const";
 
 export default class Login extends React.Component {
   constructor(props) {
@@ -30,7 +31,7 @@ export default class Login extends React.Component {
         <Button
           onPress={() => console.log("pressed")}
           title="Login"
-          color="#73f8c9"
+          color={constants.mainColor}
           accessibilityLabel="Login to White Noise"
           style={styles.button}
         />

@@ -30,6 +30,7 @@ class Home extends React.Component {
               style={styles.linearGradient}
             >
               <Player
+                style={styles.player}
                 favoriteSong={this.props.screenProps.favoriteSong}
                 settingsClone={this.props.screenProps.settingsClone}
                 storeSettings={data =>
@@ -53,7 +54,7 @@ const RootStack = createStackNavigator(
     Home: {
       screen: props => <Home {...props} />,
       navigationOptions: {
-        title: "White Noise: Smart Sleep",
+        title: "",
         headerStyle: {
           backgroundColor: "rgba(3, 218, 198, 1)",
           borderBottomColor: "transparent"
@@ -150,7 +151,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignContent: "center",
     justifyContent: "center",
-    flexDirection: "row"
+    flexDirection: "row",
+    zIndex: 1
   },
   main: {
     height: "100%"
@@ -160,14 +162,14 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     alignItems: "center",
     width: "100%",
-    zIndex: 1,
+    zIndex: 0,
     alignSelf: "center",
     justifyContent: "space-between"
   },
   linearGradient: {
     flex: 1,
     width: "100%",
-    zIndex: 2,
+    zIndex: 0,
     position: "absolute",
     height: "100%",
     alignSelf: "stretch",

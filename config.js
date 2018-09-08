@@ -3,7 +3,7 @@ export const songs = [
     key: 1,
     fileName: "white-noise.mp3",
     name: "White Noise Baby Sleep",
-    duration: 601
+    duration: 600.99
   },
   {
     key: 2,
@@ -15,19 +15,19 @@ export const songs = [
     key: 3,
     fileName: "exhaust-hood.mp3",
     name: "The Kitchen Hood",
-    duration: 239.65
+    duration: 30.43
   },
   {
     key: 4,
     fileName: "relaxing-shower.mp3",
     name: "Relaxing Shower Sound",
-    duration: 601
+    duration: 31.86
   },
   {
     key: 5,
     fileName: "water-tap-running.mp3",
     name: "Running Water White Noise",
-    duration: 239.65
+    duration: 30.38
   }
 ];
 
@@ -43,7 +43,7 @@ export const settings = [
     }
   },
   {
-    key: 4,
+    key: 2,
     name: "Stop Playing in 20 min",
     setting: "autoStop",
     value: false,
@@ -54,7 +54,7 @@ export const settings = [
     }
   },
   {
-    key: 2,
+    key: 3,
     name: "Auto Play on Start",
     setting: "autoPLay",
     value: false,
@@ -64,7 +64,7 @@ export const settings = [
     }
   },
   {
-    key: 3,
+    key: 4,
     name: "Continuous Play",
     setting: "continuousPlay",
     value: true,

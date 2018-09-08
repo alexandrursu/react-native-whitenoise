@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { Icon } from "react-native-elements";
+import { constants } from "../helpers/const";
 
 export default class BottomNavigator extends React.Component {
   constructor(props) {
@@ -19,20 +20,22 @@ export default class BottomNavigator extends React.Component {
         <Icon
           onPress={() => this.changeRoute("Home")}
           name="home"
-          color={this.state.active === "Home" ? "#73f8c9" : "#ffffff"}
+          color={this.state.active === "Home" ? "#00ffbf" : "#ffffff"}
           underlayColor={"rgba(0,0,0,0)"}
         />
         <Icon
           onPress={() => this.changeRoute("Settings")}
           name="settings"
-          color={this.state.active === "Settings" ? "#73f8c9" : "#ffffff"}
+          color={this.state.active === "Settings" ? "#00ffbf" : "#ffffff"}
           underlayColor={"rgba(0,0,0,0)"}
         />
         <Icon
           onPress={() => this.changeRoute("Profile")}
-          name="user-circle-o"
+          name="info-circle"
           type="font-awesome"
-          color={this.state.active === "Profile" ? "#73f8c9" : "#ffffff"}
+          color={
+            this.state.active === "Profile" ? constants.mainColor : "#ffffff"
+          }
           underlayColor={"rgba(0,0,0,0)"}
         />
       </View>

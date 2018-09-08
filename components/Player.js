@@ -44,7 +44,7 @@ export default class Player extends React.Component {
       // see "Returned data" section below
       // console.log("Sound level info", data);
       if (
-        data.value > 0 &&
+        data.value > -10 &&
         !this.state.playing &&
         this.props.settingsClone[0].value
       ) {
@@ -284,6 +284,7 @@ export default class Player extends React.Component {
             console.log("error2");
           }
         });
+        this.setNumberOfLoops();
       }, 100);
     }
   };
@@ -317,6 +318,7 @@ export default class Player extends React.Component {
     return (
       <View style={styles.player}>
         <View style={styles.layerTop}>
+          <Text style={styles.title}>{this.state.currentSong.name}</Text>
           {/*<Icon*/}
           {/*name="stopwatch"*/}
           {/*type="entypo"*/}
@@ -337,9 +339,11 @@ export default class Player extends React.Component {
           playThisSong={this.playThisSong.bind(this)}
         />
         <Text style={styles.countDown}>
-          {fancyTimeFormat(
-            this.state.favoriteSong.duration - this.state.currentTime
-          )}
+          {this.props.settingsClone[3].value
+            ? "--:--"
+            : fancyTimeFormat(
+                this.state.favoriteSong.duration - this.state.currentTime
+              )}
         </Text>
         <PlayList
           sounds={this.state.sounds}
@@ -373,9 +377,24 @@ const styles = StyleSheet.create({
     alignContent: "center",
     justifyContent: "center",
     textAlign: "center",
-    top: 3,
-    fontSize: 30,
-    fontWeight: "200"
+    top: 0,
+    fontSize: 20,
+    fontWeight: "300"
+  },
+  title: {
+    color: "#fff",
+    zIndex: 5,
+    display: "flex",
+    alignItems: "center",
+    alignContent: "center",
+    justifyContent: "center",
+    textAlign: "center",
+    top: 0,
+    fontSize: 18,
+    fontWeight: "500",
+    textShadowColor: "rgba(0, 0, 0, 0.1)",
+    textShadowOffset: { width: 0.5, height: 0.5 },
+    textShadowRadius: 10
   },
   player: {
     display: "flex",

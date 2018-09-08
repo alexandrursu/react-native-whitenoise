@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import { Icon } from "react-native-elements";
+import { constants } from "../../helpers/const";
 import { fancyTimeFormat } from "../../helpers/helpers";
 
 export default class PlayListItem extends React.Component {
@@ -41,7 +42,9 @@ export default class PlayListItem extends React.Component {
                     : "play-arrow"
                 }
                 color={
-                  this.isThisActive(this.props.fileName) ? "#73f8c9" : "#fff"
+                  this.isThisActive(this.props.fileName)
+                    ? constants.mainColor
+                    : "#fff"
                 }
               />
             </View>
@@ -57,7 +60,7 @@ export default class PlayListItem extends React.Component {
           }
           color={
             this.props.fileName === this.props.favoriteSong.fileName
-              ? "#73f8c9"
+              ? constants.mainColor
               : "#fff"
           }
           type={
@@ -141,7 +144,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     height: 20,
     width: 20,
-    borderColor: "#73f8c9",
+    borderColor: constants.mainColor,
     marginRight: 15
   },
   iconsFavorite: {

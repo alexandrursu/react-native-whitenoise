@@ -1,6 +1,7 @@
 import React from "react";
 import { TouchableOpacity, StyleSheet, Text, View } from "react-native";
 import { Icon } from "react-native-elements";
+import { constants } from "../../helpers/const";
 
 export default class SettingsItem extends React.Component {
   constructor(props) {
@@ -48,7 +49,7 @@ export default class SettingsItem extends React.Component {
         <View style={styles.layerBottom}>
           <Text
             style={{
-              color: this.props.value ? "#73f8c9" : "#fff",
+              color: this.props.value ? constants.mainColor : "#fff",
               fontWeight: this.props.value ? "900" : "100"
             }}
           >

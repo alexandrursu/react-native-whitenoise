@@ -9,6 +9,7 @@ import {
 import { Icon } from "react-native-elements";
 import CanvasImage from "./CanvasImage";
 import ProgressCircle from "react-native-progress-circle";
+import { constants } from "../../helpers/const";
 import { settings } from "../../config";
 
 export default class PlayButton extends React.Component {
@@ -42,22 +43,16 @@ export default class PlayButton extends React.Component {
 
     return (
       <View style={styles.playerTop}>
-        <View style={styles.smartIconPlaceholder}>
-          <Icon
-            name="wifi"
-            type="FontAwesome5"
-            color={this.props.settingsClone[0].value ? "#73f8c9" : "#fff"}
-            iconStyle={styles.iconSignal}
-            underlayColor={"rgba(0,0,0,0)"}
-          />
-          <Icon
-            name="child-friendly"
-            color={this.props.settingsClone[0].value ? "#73f8c9" : "#fff"}
-            iconStyle={styles.icon}
-            onPress={() => this.props.storeSettings("smartFeature")}
-            underlayColor={"rgba(0,0,0,0)"}
-          />
-        </View>
+        <Icon
+          name="md-infinite"
+          type="ionicon"
+          iconStyle={styles.iconInfinite}
+          color={
+            this.props.settingsClone[3].value ? constants.mainColor : "#fff"
+          }
+          onPress={() => this.continuousPlay()}
+          underlayColor={"rgba(0,0,0,0)"}
+        />
         <TouchableOpacity
           style={styles.touchableOpacity}
           onPress={() => {
@@ -85,26 +80,42 @@ export default class PlayButton extends React.Component {
                 radius={40}
                 borderWidth={3}
                 color="#a1dfdc"
-                shadowColor="#73f8c9"
+                shadowColor={constants.mainColor}
                 bgColor="#a1dfdc"
               >
                 <View style={styles.playIcon}>
                   <Icon
                     name={this.props.playing ? "pause" : "play-arrow"}
+                    type={this.props.playing ? "ionicons" : ""}
                     color="#fff"
+                    iconStyle={{ fontSize: 28 }}
                   />
                 </View>
               </ProgressCircle>
             </View>
           </Animated.View>
         </TouchableOpacity>
-        <Icon
-          name="infinity"
-          type="entypo"
-          color={this.props.settingsClone[3].value ? "#73f8c9" : "#fff"}
-          onPress={() => this.continuousPlay()}
-          underlayColor={"rgba(0,0,0,0)"}
-        />
+        <View style={styles.smartIconPlaceholder}>
+          <Icon
+            name="wifi"
+            type="FontAwesome5"
+            color={
+              this.props.settingsClone[0].value ? constants.mainColor : "#fff"
+            }
+            iconStyle={styles.iconSignal}
+            underlayColor={"rgba(0,0,0,0)"}
+          />
+          <Icon
+            name="baby-buggy"
+            type="material-community"
+            color={
+              this.props.settingsClone[0].value ? constants.mainColor : "#fff"
+            }
+            iconStyle={styles.iconBaby}
+            onPress={() => this.props.storeSettings("smartFeature")}
+            underlayColor={"rgba(0,0,0,0)"}
+          />
+        </View>
       </View>
     );
   }
@@ -113,16 +124,19 @@ export default class PlayButton extends React.Component {
 const styles = StyleSheet.create({
   smartIconPlaceholder: {
     display: "flex",
-    height: 24,
+    height: 30,
     alignSelf: "center"
   },
   iconSignal: {
-    fontSize: 10,
-    height: 10,
+    fontSize: 11,
+    height: 11,
     position: "absolute",
-    top: 0,
-    left: 3,
-    transform: [{ rotate: "-45deg" }]
+    top: -2,
+    left: 4,
+    transform: [{ rotate: "-45deg" }],
+    textShadowColor: "rgba(0, 0, 0, 0.1)",
+    textShadowOffset: { width: 0.1, height: 0.1 },
+    textShadowRadius: 1
   },
   playerTop: {
     display: "flex",
@@ -140,9 +154,24 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignContent: "center",
     justifyContent: "center",
+    marginRight: 5,
     marginBottom: 10
   },
-  icon: {},
+  iconBaby: {
+    textShadowColor: "rgba(0, 0, 0, 0.2)",
+    textShadowOffset: { width: 0.1, height: 0.1 },
+    textShadowRadius: 1,
+    fontSize: 28,
+    fontWeight: "bold",
+    top: -3
+  },
+  iconInfinite: {
+    textShadowColor: "rgba(0, 0, 0, 0.2)",
+    textShadowOffset: { width: 0.1, height: 0.1 },
+    textShadowRadius: 1,
+    fontSize: 32,
+    fontWeight: "bold"
+  },
   textStyle: {
     color: "#fff",
     zIndex: 1,
@@ -171,9 +200,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignContent: "center",
     justifyContent: "center",
-    borderWidth: 0.5,
-    borderColor: "#fff",
-    borderRadius: 35,
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.75)",
+    borderRadius: 40,
     height: 35,
     width: 35
   }
