@@ -1,32 +1,38 @@
 export const songs = [
   {
     key: 1,
-    fileName: "white-noise.mp3",
+    fileName: "white-noise-30.mp3",
     name: "White Noise Baby Sleep",
     duration: 600.99
   },
   {
     key: 2,
-    fileName: "spring-river.mp3",
+    fileName: "spring-river-30.mp3",
     name: "Spring River Sound",
     duration: 60.52
   },
   {
     key: 3,
-    fileName: "exhaust-hood.mp3",
+    fileName: "exhaust-hood-30.mp3",
     name: "The Kitchen Hood",
     duration: 30.43
   },
   {
     key: 4,
-    fileName: "relaxing-shower.mp3",
+    fileName: "relaxing-shower-30.mp3",
     name: "Relaxing Shower Sound",
     duration: 31.86
   },
   {
     key: 5,
-    fileName: "water-tap-running.mp3",
-    name: "Running Water White Noise",
+    fileName: "water-tap-running-30.mp3",
+    name: "Running Water Noise",
+    duration: 30.38
+  },
+  {
+    key: 6,
+    fileName: "water-tap-running-fake.mp3",
+    name: "Thunderstorm Effects",
     duration: 30.38
   }
 ];
@@ -44,10 +50,10 @@ export const settings = [
   },
   {
     key: 2,
-    name: "Stop Playing in 20 min",
+    name: "Auto Stop Timer",
     setting: "autoStop",
-    value: false,
-    duration: 20000, //seconds
+    value: true,
+    duration: 0.09, // equal with 5 minutes, maximum value 1
     icon: {
       name: "stopwatch",
       type: "entypo"
@@ -61,16 +67,6 @@ export const settings = [
     icon: {
       name: "playlist-play",
       type: "material"
-    }
-  },
-  {
-    key: 4,
-    name: "Continuous Play",
-    setting: "continuousPlay",
-    value: true,
-    icon: {
-      name: "500px",
-      type: "entypo"
     }
   }
 ];
@@ -87,4 +83,16 @@ export const defaultFavorite = {
   fileName: "",
   name: "",
   duration: 0
+};
+
+export const continuousPlay = {
+  key: 2,
+  name: "Continuous Play",
+  setting: "continuousPlay",
+  value: false,
+  duration: 0, //seconds
+  icon: {
+    name: "500px",
+    type: "entypo"
+  }
 };

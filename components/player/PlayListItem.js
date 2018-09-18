@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import { Icon } from "react-native-elements";
 import { constants } from "../../helpers/const";
@@ -165,6 +165,6 @@ const styles = StyleSheet.create({
   }
 });
 
-PlayListItem.propTypes = {
-  name: PropTypes.string.isRequired
-};
+// PlayListItem.propTypes = {
+//   name: PropTypes.string.isRequired
+// };

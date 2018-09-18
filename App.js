@@ -1,53 +1,13 @@
 import React from "react";
-import { StyleSheet, View, ImageBackground, AsyncStorage } from "react-native";
-import LinearGradient from "react-native-linear-gradient";
-import Mountain from "./assets/images/mountain.jpeg";
-import Player from "./components/Player";
+import { AsyncStorage } from "react-native";
+import Home from "./components/Home";
 import Profile from "./components/Profile";
 import Settings from "./components/Settings";
-import BottomNavigation from "./components/BottomNavigation";
+import InfoMenu from "./components/InfoMenu";
 import { createStackNavigator } from "react-navigation";
 import { settings, favorite } from "./config";
 
 let settingsClone;
-
-class Home extends React.Component {
-  constructor(props) {
-    super(props);
-
-    console.log(props);
-  }
-  render() {
-    return (
-      <View style={styles.main}>
-        <ImageBackground source={Mountain} style={styles.backgroundImage}>
-          <View style={styles.container}>
-            <LinearGradient
-              colors={["rgba(3, 218, 198, 0.8)", "rgba(98, 0, 238, 0.5)"]}
-              start={{ x: 0, y: 0.1 }}
-              end={{ x: 0.1, y: 1.0 }}
-              locations={[0, 1]}
-              style={styles.linearGradient}
-            >
-              <Player
-                style={styles.player}
-                favoriteSong={this.props.screenProps.favoriteSong}
-                settingsClone={this.props.screenProps.settingsClone}
-                storeSettings={data =>
-                  this.props.screenProps.storeSettings(data)
-                }
-                storeFavorite={data =>
-                  this.props.screenProps.storeFavorite(data)
-                }
-              />
-              <BottomNavigation routes={this.props.navigation} />
-            </LinearGradient>
-          </View>
-        </ImageBackground>
-      </View>
-    );
-  }
-}
 
 const RootStack = createStackNavigator(
   {
@@ -77,7 +37,19 @@ const RootStack = createStackNavigator(
         }
       }
     },
-    Profile: Profile
+    Profile: Profile,
+    InfoMenu: {
+      screen: props => <InfoMenu {...props} />,
+      navigationOptions: {
+        title: "Icons Guide",
+        headerStyle: {
+          backgroundColor: "rgba(3, 218, 198, 1)",
+          borderBottomColor: "transparent"
+        },
+        headerTintColor: "#fff",
+        headerTitleStyle: {}
+      }
+    }
   },
   {
     initialRouteName: "Home"
@@ -87,7 +59,8 @@ const RootStack = createStackNavigator(
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-
+    //disabling yellow warning box
+    console.disableYellowBox = true;
     this.state = {
       settingsClone: settings
     };
@@ -102,6 +75,21 @@ export default class App extends React.Component {
     console.log(setting);
     settingsClone = this.state.settingsClone.map(item => {
       item.setting === setting ? (item.value = !item.value) : "";
+      return item;
+    });
+
+    AsyncStorage.setItem("settings", JSON.stringify(settingsClone)).then(() => {
+      this.setState({
+        settingsClone: settingsClone
+      });
+    });
+  };
+
+  storeSliderSettings = sliderValue => {
+    settingsClone = this.state.settingsClone.map(item => {
+      if (item.setting === "autoStop") {
+        item.duration = Math.floor(sliderValue * 100) / 100;
+      }
       return item;
     });
 
@@ -136,53 +124,10 @@ export default class App extends React.Component {
       <RootStack
         screenProps={{
           settingsClone: this.state.settingsClone,
-          storeSettings: data => this.storeSettings(data)
+          storeSettings: data => this.storeSettings(data),
+          storeSliderSettings: data => this.storeSliderSettings(data)
         }}
       />
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    display: "flex",
-    flex: 1,
-    height: "100%",
-    alignItems: "center",
-    alignContent: "center",
-    justifyContent: "center",
-    flexDirection: "row",
-    zIndex: 1
-  },
-  main: {
-    height: "100%"
-  },
-  backgroundImage: {
-    flex: 1,
-    backgroundColor: "transparent",
-    alignItems: "center",
-    width: "100%",
-    zIndex: 0,
-    alignSelf: "center",
-    justifyContent: "space-between"
-  },
-  linearGradient: {
-    flex: 1,
-    width: "100%",
-    zIndex: 0,
-    position: "absolute",
-    height: "100%",
-    alignSelf: "stretch",
-    alignItems: "center"
-  },
-  textStyle: {
-    color: "#fff",
-    zIndex: 1,
-    display: "flex",
-    alignItems: "center",
-    alignContent: "center",
-    justifyContent: "center",
-    textAlign: "center",
-    top: 3
-  }
-});

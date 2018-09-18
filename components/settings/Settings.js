@@ -9,6 +9,10 @@ export default class Settings extends React.Component {
     super(props);
   }
 
+  componentDidUpdate(update) {
+    console.log("did update from settings", update);
+  }
+
   render() {
     return (
       <View style={styles.containerTransparent}>
@@ -16,15 +20,29 @@ export default class Settings extends React.Component {
           return (
             <SettingsItem
               key={item.key}
+              item={item}
               name={item.name}
               setting={item.setting}
               value={item.value}
               iconName={item.icon.name}
               type={item.icon.type}
               storeSettings={data => this.props.storeSettings(data)}
+              storeSliderSettings={data => this.props.storeSliderSettings(data)}
+              showSlider={item.setting === "autoStop"}
             />
           );
         })}
+        <SettingsItem
+          item={{ duration: 0 }}
+          name="Continuous play"
+          setting="autoStop"
+          value={!this.props.settingsClone[1].value}
+          iconName="500px"
+          type="entypo"
+          storeSettings={data => this.props.storeSettings(data)}
+          storeSliderSettings={data => this.props.storeSliderSettings(data)}
+          showSlider={false}
+        />
       </View>
     );
   }

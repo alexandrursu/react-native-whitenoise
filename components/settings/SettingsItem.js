@@ -1,62 +1,95 @@
 import React from "react";
 import { TouchableOpacity, StyleSheet, Text, View } from "react-native";
-import { Icon } from "react-native-elements";
+import { Icon, Slider } from "react-native-elements";
 import { constants } from "../../helpers/const";
+import { debounce } from "lodash";
 
 export default class SettingsItem extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: props.value
+      stopTimerValue: this.props.item.duration
     };
-    console.log(props);
+    this.setSliderValue = debounce(this.debounceUpdate, 20);
+  }
+
+  debounceUpdate(value) {
+    this.setState({ stopTimerValue: value });
+    this.props.storeSliderSettings(this.state.stopTimerValue);
   }
 
   render() {
     return (
-      <TouchableOpacity
-        style={styles.placeholder}
-        onPress={data => this.props.storeSettings(this.props.setting)}
-      >
-        <View style={styles.layerTop}>
-          {this.props.setting === "smartFeature" ? (
+      <View style={styles.placeholder}>
+        <TouchableOpacity
+          style={styles.touch}
+          onPress={data => this.props.storeSettings(this.props.setting)}
+        >
+          <View style={styles.layerTop}>
+            {this.props.setting === "smartFeature" ? (
+              <Icon
+                name="wifi"
+                type="FontAwesome5"
+                iconStyle={styles.iconSignal}
+              />
+            ) : (
+              ""
+            )}
             <Icon
-              name="wifi"
-              type="FontAwesome5"
-              iconStyle={styles.iconSignal}
+              name={this.props.iconName}
+              type={this.props.type}
+              color="#fff"
+              iconStyle={styles.icon}
             />
-          ) : (
-            ""
-          )}
-          <Icon
-            name={this.props.iconName}
-            type={this.props.type}
-            color="#fff"
-            iconStyle={styles.icon}
-          />
-        </View>
-        <View style={styles.layerMiddle}>
-          <Text
-            style={{
-              color: "#fff",
-              fontWeight: "600",
-              textAlign: "center"
-            }}
-          >
-            {this.props.name}
-          </Text>
-        </View>
-        <View style={styles.layerBottom}>
-          <Text
-            style={{
-              color: this.props.value ? constants.mainColor : "#fff",
-              fontWeight: this.props.value ? "900" : "100"
-            }}
-          >
-            {this.props.value ? "On" : "Off"}
-          </Text>
-        </View>
-      </TouchableOpacity>
+          </View>
+          <View style={styles.layerMiddle}>
+            <Text
+              style={{
+                color: "#fff",
+                fontWeight: "600",
+                textAlign: "center"
+              }}
+            >
+              {this.props.name}
+            </Text>
+          </View>
+          <View style={styles.layerBottom}>
+            <Text
+              style={{
+                color: this.props.value ? constants.mainColor : "#fff",
+                fontWeight: this.props.value ? "900" : "500"
+              }}
+            >
+              {this.props.setting === "autoStop" &&
+              this.props.value &&
+              this.props.showSlider
+                ? this.props.value
+                  ? `${Math.floor(this.state.stopTimerValue * 60)} min`
+                  : "Off"
+                : this.props.value
+                  ? "On"
+                  : "Off"}
+            </Text>
+          </View>
+        </TouchableOpacity>
+        {this.props.setting === "autoStop" &&
+        this.props.value &&
+        this.props.showSlider ? (
+          <View style={styles.slider}>
+            <Slider
+              minimumValue={0.05}
+              minimumTrackTintColor={constants.mainColor}
+              thumbStyle={{ top: 2 }}
+              thumbTintColor={constants.mainColor}
+              value={this.state.stopTimerValue}
+              onValueChange={value => this.setSliderValue(value)}
+              style={styles.slider}
+            />
+          </View>
+        ) : (
+          ""
+        )}
+      </View>
     );
   }
 }
@@ -65,16 +98,35 @@ const styles = StyleSheet.create({
   placeholder: {
     display: "flex",
     flexDirection: "column",
-    justifyContent: "space-between",
     backgroundColor: "rgba(255,255,255,0.3)",
     borderRadius: 5,
     alignItems: "center",
     alignContent: "center",
+    justifyContent: "space-between",
+
     margin: "5%",
     width: "40%",
     height: 150,
+    position: "relative"
+  },
+  //Clone of placeholder but handles real touch
+  touch: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    borderRadius: 5,
+    alignItems: "center",
+    alignContent: "center",
+    width: "100%",
     paddingRight: 10,
-    paddingLeft: 10
+    paddingLeft: 10,
+    paddingBottom: 10
+  },
+  slider: {
+    flex: 1,
+    alignItems: "stretch",
+    justifyContent: "center",
+    width: "100%"
   },
   icon: {
     fontSize: 40,

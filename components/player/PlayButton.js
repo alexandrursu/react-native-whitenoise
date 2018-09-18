@@ -23,7 +23,7 @@ export default class PlayButton extends React.Component {
 
   continuousPlay() {
     this.props.setNumberOfLoops();
-    this.props.storeSettings("continuousPlay");
+    this.props.storeSettings("autoStop");
   }
   render() {
     const skewX = this.props.spinValue.interpolate({
@@ -48,7 +48,7 @@ export default class PlayButton extends React.Component {
           type="ionicon"
           iconStyle={styles.iconInfinite}
           color={
-            this.props.settingsClone[3].value ? constants.mainColor : "#fff"
+            !this.props.settingsClone[1].value ? constants.mainColor : "#fff"
           }
           onPress={() => this.continuousPlay()}
           underlayColor={"rgba(0,0,0,0)"}

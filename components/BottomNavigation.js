@@ -30,11 +30,11 @@ export default class BottomNavigator extends React.Component {
           underlayColor={"rgba(0,0,0,0)"}
         />
         <Icon
-          onPress={() => this.changeRoute("Profile")}
+          onPress={() => this.changeRoute("InfoMenu")}
           name="info-circle"
           type="font-awesome"
           color={
-            this.state.active === "Profile" ? constants.mainColor : "#ffffff"
+            this.state.active === "InfoMenu" ? constants.mainColor : "#ffffff"
           }
           underlayColor={"rgba(0,0,0,0)"}
         />

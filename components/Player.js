@@ -27,7 +27,12 @@ export default class Player extends React.Component {
       sounds: songs,
       currentTime: 0,
       currentPercentage: 0,
+      tickInterval: null,
+      tickNumber: 1, // used to for countdown
       counter: 0,
+      previousDurationValue: 0,
+      secondsLeftAfterNextLoop: 30,
+      loopsLeft: null,
       currentSong: defaultCurrent,
       favoriteSong: defaultFavorite,
       sound: null,
@@ -37,6 +42,23 @@ export default class Player extends React.Component {
     console.log("========current from favorite==========");
     console.log(this.state.currentSong);
   }
+
+  componentDidUpdate(update) {
+    console.log("did update from player", update);
+    console.log(this.props.settingsClone[1].duration);
+    console.log(this.state.previousDurationValue);
+    //Fix - check if song in paused state and slider auto stop is changed then reset song to stop state
+    if (
+      this.state.paused &&
+      this.props.settingsClone[1].duration !== this.state.previousDurationValue
+    ) {
+      this.setState({
+        previousDurationValue: this.props.settingsClone[1].duration
+      });
+      this.totalStop();
+    }
+  }
+
   componentDidMount() {
     this.retrieveFavorite();
     RNSoundLevel.start();
@@ -44,7 +66,7 @@ export default class Player extends React.Component {
       // see "Returned data" section below
       // console.log("Sound level info", data);
       if (
-        data.value > -10 &&
+        data.value > -30 &&
         !this.state.playing &&
         this.props.settingsClone[0].value
       ) {
@@ -125,9 +147,13 @@ export default class Player extends React.Component {
     });
   };
 
+  //TODO: Fix - timer not showing correct countdown when multiple loops
   setNumberOfLoops() {
     setTimeout(() => {
-      let num = this.props.settingsClone[3].value ? -1 : 0;
+      let num = !this.props.settingsClone[1].value
+        ? -1
+        : Math.ceil((this.props.settingsClone[1].duration * 60 * 60) / 30) - 1;
+
       // If -1 will loop indefinitely until stop() is called
       if (this.state.playing) {
         this.state.sound.setNumberOfLoops(num);
@@ -139,9 +165,14 @@ export default class Player extends React.Component {
 
   playThisSong = song => {
     return new Promise((resolve, reject) => {
+      // Each time new song is played we update previous duration value otherwise total stop will be
+      // triggered due to different values between settingsClone[1].duration and previousDurationValue
+      this.setState({
+        previousDurationValue: this.props.settingsClone[1].duration
+      });
       let fileName = song.fileName;
       if (typeof fileName === "undefined") {
-        console.log("======== fired udefined ========");
+        console.log("======== fired undefined ========");
         return reject("undefined");
       }
       if (fileName === this.state.currentSong.fileName && this.state.playing) {
@@ -185,13 +216,23 @@ export default class Player extends React.Component {
       playing: false,
       paused: true
     });
+    clearInterval(this.state.tickInterval);
+    this.setState({
+      tickInterval: null
+    });
   };
 
   resume = () => {
-    console.log("same song, so pause it!");
+    console.log("same song, so resume it!");
     this.state.sound.play();
     this.setState({
       playing: true
+    });
+    //
+    this.setState({
+      tickInterval: setInterval(() => {
+        this.tick(false);
+      }, 1000)
     });
   };
 
@@ -204,9 +245,15 @@ export default class Player extends React.Component {
 
   totalStop = song => {
     console.log("total stop!");
+    clearInterval(this.state.tickInterval);
+    this.setState({
+      tickInterval: null
+    });
     this.state.sound.stop(() => {
       this.setState({
-        playing: false
+        playing: false,
+        currentPercentage: 0,
+        tickNumber: 0
       });
     });
   };
@@ -221,24 +268,36 @@ export default class Player extends React.Component {
       }
     });
     console.log(this.state.sound);
-
+    clearInterval(this.state.tickInterval);
+    this.setState({
+      tickInterval: null
+    });
+    this.setState({
+      currentPercentage: 0,
+      percentage: 0,
+      tickNumber: 0,
+      tickInterval: setInterval(() => {
+        this.tick(true);
+      }, 1000)
+    });
     if (!this.state.playing) {
-      this.tickInterval = setInterval(() => {
-        this.tick();
-      }, 1000);
       setTimeout(() => {
         this.state.sound.play(success => {
           if (success) {
             console.log("successfully finished playing");
             this.totalStop();
-            if (this.tickInterval) {
-              clearInterval(this.tickInterval);
-              this.tickInterval = null;
+            if (this.state.tickInterval) {
+              clearInterval(this.state.tickInterval);
+              this.setState({
+                tickInterval: null
+              });
             }
           } else {
-            if (this.tickInterval) {
-              clearInterval(this.tickInterval);
-              this.tickInterval = null;
+            if (this.state.tickInterval) {
+              clearInterval(this.state.tickInterval);
+              this.setState({
+                tickInterval: null
+              });
             }
             console.log("error1");
           }
@@ -257,29 +316,29 @@ export default class Player extends React.Component {
       song.fileName !== this.state.currentSong.fileName &&
       this.state.playing
     ) {
-      this.tickInterval = setInterval(() => {
-        this.tick();
-      }, 1000);
-
-      this.setState({
-        currentSong: song,
-        percentage: 0
-      });
       console.log("new song!");
+      this.setState({
+        currentSong: song
+      });
+
       setTimeout(() => {
         this.state.sound.play(success => {
           if (success) {
             console.log("successfully finished playing");
             this.totalStop();
 
-            if (this.tickInterval) {
-              clearInterval(this.tickInterval);
-              this.tickInterval = null;
+            if (this.state.tickInterval) {
+              clearInterval(this.state.tickInterval);
+              this.setState({
+                tickInterval: null
+              });
             }
           } else {
-            if (this.tickInterval) {
-              clearInterval(this.tickInterval);
-              this.tickInterval = null;
+            if (this.state.tickInterval) {
+              clearInterval(this.state.tickInterval);
+              this.setState({
+                tickInterval: null
+              });
             }
             console.log("error2");
           }
@@ -288,13 +347,52 @@ export default class Player extends React.Component {
       }, 100);
     }
   };
-  tick() {
+  tick(newSong) {
     this.state.sound.getCurrentTime(seconds => {
-      if (this.tickInterval) {
+      if (this.state.tickInterval) {
+        if (this.state.loopsLeft === null) {
+          this.setState({
+            loopsLeft: this.state.sound.getNumberOfLoops()
+          });
+        }
+
+        let loops = this.state.loopsLeft;
+        let loopsLeft = loops;
+        let tickNumber = this.state.tickNumber;
+        let secondsLeftAfterNextLoop = this.state.secondsLeftAfterNextLoop;
+
+        tickNumber++;
+        secondsLeftAfterNextLoop--;
+
         this.setState({
-          currentTime: seconds,
+          tickNumber: tickNumber
+        });
+
+        if (loopsLeft !== 0 && secondsLeftAfterNextLoop === 0) {
+          loopsLeft--;
+
+          this.setState({
+            loopsLeft: loopsLeft,
+            secondsLeftAfterNextLoop: 30 //TODO: Check - maybe 29?
+          });
+          secondsLeftAfterNextLoop = this.state.secondsLeftAfterNextLoop;
+        }
+
+        console.log("loops " + loops);
+        console.log("seconds " + seconds);
+        console.log("loops left: " + this.state.loopsLeft);
+        console.log(
+          "this.state.secondsLeftAfterNextLoop: " +
+            this.state.secondsLeftAfterNextLoop
+        );
+        this.setState({
+          secondsLeftAfterNextLoop,
+          currentTime: Math.floor(seconds),
           currentPercentage: Math.round(
-            Math.ceil(seconds) * (100 / this.state.currentSong.duration)
+            100 -
+              (this.props.settingsClone[1].duration * 60 * 60 -
+                this.state.tickNumber) *
+                (100 / (this.props.settingsClone[1].duration * 60 * 60))
           )
         });
         // if (this.state.currentPercentage >= 100) {
@@ -319,6 +417,9 @@ export default class Player extends React.Component {
       <View style={styles.player}>
         <View style={styles.layerTop}>
           <Text style={styles.title}>{this.state.currentSong.name}</Text>
+          <Text style={styles.titleSmall}>
+            now {this.state.playing ? "playing" : "paused"}
+          </Text>
           {/*<Icon*/}
           {/*name="stopwatch"*/}
           {/*type="entypo"*/}
@@ -339,10 +440,11 @@ export default class Player extends React.Component {
           playThisSong={this.playThisSong.bind(this)}
         />
         <Text style={styles.countDown}>
-          {this.props.settingsClone[3].value
+          {!this.props.settingsClone[1].value
             ? "--:--"
             : fancyTimeFormat(
-                this.state.favoriteSong.duration - this.state.currentTime
+                this.props.settingsClone[1].duration * 60 * 60 -
+                  this.state.tickNumber
               )}
         </Text>
         <PlayList
@@ -395,6 +497,18 @@ const styles = StyleSheet.create({
     textShadowColor: "rgba(0, 0, 0, 0.1)",
     textShadowOffset: { width: 0.5, height: 0.5 },
     textShadowRadius: 10
+  },
+  titleSmall: {
+    color: "rgba(255,255,255,0.8)",
+    zIndex: 5,
+    display: "flex",
+    alignItems: "center",
+    alignContent: "center",
+    justifyContent: "center",
+    textAlign: "center",
+    top: 0,
+    fontSize: 14,
+    fontWeight: "500"
   },
   player: {
     display: "flex",

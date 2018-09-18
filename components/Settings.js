@@ -27,6 +27,9 @@ export default class Setting extends React.Component {
                 storeSettings={data =>
                   this.props.screenProps.storeSettings(data)
                 }
+                storeSliderSettings={data =>
+                  this.props.screenProps.storeSliderSettings(data)
+                }
               />
               <BottomNavigation routes={this.props.navigation} />
             </LinearGradient>
