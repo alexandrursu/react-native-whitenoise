@@ -3,13 +3,13 @@ export const songs = [
     key: 1,
     fileName: "white-noise-30.mp3",
     name: "White Noise Baby Sleep",
-    duration: 600.99
+    duration: 30.02
   },
   {
     key: 2,
     fileName: "spring-river-30.mp3",
     name: "Spring River Sound",
-    duration: 60.52
+    duration: 30.04
   },
   {
     key: 3,
@@ -42,7 +42,7 @@ export const settings = [
     key: 1,
     name: "Baby Cry Detection",
     setting: "smartFeature",
-    value: true,
+    value: false,
     icon: {
       name: "child-friendly",
       type: ""
@@ -53,7 +53,7 @@ export const settings = [
     name: "Auto Stop Timer",
     setting: "autoStop",
     value: true,
-    duration: 0.09, // equal with 5 minutes, maximum value 1
+    duration: 3, // equal with 3 minutes, maximum value 60
     icon: {
       name: "stopwatch",
       type: "entypo"
@@ -80,9 +80,9 @@ export const defaultCurrent = {
 
 export const defaultFavorite = {
   key: 1,
-  fileName: "",
-  name: "",
-  duration: 0
+  fileName: "white-noise-30.mp3",
+  name: "White Noise Baby Sleep",
+  duration: 30.02
 };
 
 export const continuousPlay = {

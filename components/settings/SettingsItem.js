@@ -64,7 +64,7 @@ export default class SettingsItem extends React.Component {
               this.props.value &&
               this.props.showSlider
                 ? this.props.value
-                  ? `${Math.floor(this.state.stopTimerValue * 60)} min`
+                  ? `${Math.floor(this.state.stopTimerValue)} min`
                   : "Off"
                 : this.props.value
                   ? "On"
@@ -77,13 +77,15 @@ export default class SettingsItem extends React.Component {
         this.props.showSlider ? (
           <View style={styles.slider}>
             <Slider
-              minimumValue={0.05}
+              minimumValue={3}
+              maximumValue={60}
               minimumTrackTintColor={constants.mainColor}
               thumbStyle={{ top: 2 }}
               thumbTintColor={constants.mainColor}
               value={this.state.stopTimerValue}
-              onValueChange={value => this.setSliderValue(value)}
+              onSlidingComplete={value => this.setSliderValue(value)}
               style={styles.slider}
+              step={1}
             />
           </View>
         ) : (

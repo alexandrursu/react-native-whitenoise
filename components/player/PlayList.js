@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "50%",
     overflow: "scroll",
-    marginTop: 25
+    marginTop: 20
   },
   separator: {
     marginTop: 0,

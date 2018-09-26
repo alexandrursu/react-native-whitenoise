@@ -125,7 +125,8 @@ const styles = StyleSheet.create({
   smartIconPlaceholder: {
     display: "flex",
     height: 30,
-    alignSelf: "center"
+    alignSelf: "center",
+    marginRight: 5
   },
   iconSignal: {
     fontSize: 11,
@@ -141,7 +142,7 @@ const styles = StyleSheet.create({
   playerTop: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-evenly",
+    justifyContent: "space-between",
     width: "100%",
     height: "32%"
   },
@@ -170,7 +171,8 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 0.1, height: 0.1 },
     textShadowRadius: 1,
     fontSize: 32,
-    fontWeight: "bold"
+    fontWeight: "bold",
+    marginLeft: 6
   },
   textStyle: {
     color: "#fff",

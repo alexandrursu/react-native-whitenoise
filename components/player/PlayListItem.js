@@ -102,6 +102,8 @@ const styles = StyleSheet.create({
   },
   song: {
     display: "flex",
+      paddingRight:5,
+      paddingLeft:5,
     paddingTop: 10,
     paddingBottom: 10,
     borderBottomWidth: 1,
@@ -115,6 +117,8 @@ const styles = StyleSheet.create({
   },
   songActive: {
     display: "flex",
+      paddingRight:5,
+      paddingLeft:5,
     paddingTop: 10,
     paddingBottom: 10,
     borderBottomWidth: 1,

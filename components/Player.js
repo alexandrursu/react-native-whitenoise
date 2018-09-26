@@ -22,13 +22,14 @@ export default class Player extends React.Component {
     this.state = {
       playing: false,
       paused: false,
+      stopped: true,
       checkedA: false,
       checkedB: true,
       sounds: songs,
       currentTime: 0,
       currentPercentage: 0,
       tickInterval: null,
-      tickNumber: 1, // used to for countdown
+      tickNumber: 0, // used to for countdown
       counter: 0,
       previousDurationValue: 0,
       secondsLeftAfterNextLoop: 30,
@@ -43,10 +44,28 @@ export default class Player extends React.Component {
     console.log(this.state.currentSong);
   }
 
+  checkSmartFeature() {
+    if (this.props.settingsClone[0].value) {
+      RNSoundLevel.start();
+      RNSoundLevel.onNewFrame = data => {
+        // see "Returned data" section below
+        console.log("Sound level info", data);
+        if (data.value > -5 && !this.state.playing) {
+          this.play(this.state.currentSong);
+        }
+      };
+    } else {
+      RNSoundLevel.stop();
+    }
+  }
+
+  //TODO debug here seems that here is stack overflow also debug baby cry feature
   componentDidUpdate(update) {
     console.log("did update from player", update);
     console.log(this.props.settingsClone[1].duration);
     console.log(this.state.previousDurationValue);
+    this.checkSmartFeature();
+
     //Fix - check if song in paused state and slider auto stop is changed then reset song to stop state
     if (
       this.state.paused &&
@@ -57,22 +76,26 @@ export default class Player extends React.Component {
       });
       this.totalStop();
     }
+
+    if(this.props.settingsClone[1].duration !== this.state.previousDurationValue){
+        this.setNumberOfLoops()
+    }
+
+    if(this.props.settingsClone[1].value && this.state.secondsLeftAfterNextLoop < 0) {
+        console.log('wrong, stop everything')
+        // this.setState({
+        //     // TODO - move value to constants
+        //     secondsLeftAfterNextLoop: 0
+        // })
+        // this.setNumberOfLoops()
+        this.resetLoopCounters()
+        this.totalStop()
+      }
   }
 
   componentDidMount() {
     this.retrieveFavorite();
-    RNSoundLevel.start();
-    RNSoundLevel.onNewFrame = data => {
-      // see "Returned data" section below
-      // console.log("Sound level info", data);
-      if (
-        data.value > -30 &&
-        !this.state.playing &&
-        this.props.settingsClone[0].value
-      ) {
-        this.play(this.state.currentSong);
-      }
-    };
+    this.checkSmartFeature();
 
     // Auto start when starting application, as retrieveSettings is async method we need to put
     setTimeout(() => {
@@ -152,7 +175,7 @@ export default class Player extends React.Component {
     setTimeout(() => {
       let num = !this.props.settingsClone[1].value
         ? -1
-        : Math.ceil((this.props.settingsClone[1].duration * 60 * 60) / 30) - 1;
+        : Math.ceil((this.props.settingsClone[1].duration * 60) / 30) - 1;
 
       // If -1 will loop indefinitely until stop() is called
       if (this.state.playing) {
@@ -214,6 +237,7 @@ export default class Player extends React.Component {
     this.state.sound.pause();
     this.setState({
       playing: false,
+        stopped: false,
       paused: true
     });
     clearInterval(this.state.tickInterval);
@@ -226,7 +250,8 @@ export default class Player extends React.Component {
     console.log("same song, so resume it!");
     this.state.sound.play();
     this.setState({
-      playing: true
+      playing: true,
+      stopped: false
     });
     //
     this.setState({
@@ -245,12 +270,14 @@ export default class Player extends React.Component {
 
   totalStop = song => {
     console.log("total stop!");
+
     clearInterval(this.state.tickInterval);
     this.setState({
       tickInterval: null
     });
     this.state.sound.stop(() => {
       this.setState({
+        stopped: true,
         playing: false,
         currentPercentage: 0,
         tickNumber: 0
@@ -258,9 +285,21 @@ export default class Player extends React.Component {
     });
   };
 
+  resetLoopCounters = () => {
+    this.setState({
+      secondsLeftAfterNextLoop: 30,
+      loopsLeft: null
+    });
+  };
+
   // Method which triggers play action
   play = song => {
     console.log("=======play song========" + song.fileName);
+    // Stop song as we do not need to listen for 'cry' when song is playing.
+    RNSoundLevel.stop();
+    // Reset loop helper counters as new song was fired
+    this.resetLoopCounters();
+
     this.state.sound = new Sound(song.fileName, Sound.MAIN_BUNDLE, error => {
       if (error) {
         console.log("failed to load the sound", error);
@@ -273,6 +312,7 @@ export default class Player extends React.Component {
       tickInterval: null
     });
     this.setState({
+      stopped: false,
       currentPercentage: 0,
       percentage: 0,
       tickNumber: 0,
@@ -281,6 +321,10 @@ export default class Player extends React.Component {
       }, 1000)
     });
     if (!this.state.playing) {
+      this.setState({
+        playing: true,
+        currentSong: song
+      });
       setTimeout(() => {
         this.state.sound.play(success => {
           if (success) {
@@ -302,16 +346,8 @@ export default class Player extends React.Component {
             console.log("error1");
           }
         });
-
-        this.setState({
-          playing: true,
-          currentSong: song
-        });
         this.setNumberOfLoops();
-
-        // this.getCurrentPercentage();
-      }, 100);
-      // this.state.sound.getCurrentTime(seconds => console.log("at " + seconds));
+      }, 300);
     } else if (
       song.fileName !== this.state.currentSong.fileName &&
       this.state.playing
@@ -387,12 +423,12 @@ export default class Player extends React.Component {
         );
         this.setState({
           secondsLeftAfterNextLoop,
-          currentTime: Math.floor(seconds),
+          currentTime: ~~seconds,
           currentPercentage: Math.round(
             100 -
-              (this.props.settingsClone[1].duration * 60 * 60 -
+              (this.props.settingsClone[1].duration * 60 -
                 this.state.tickNumber) *
-                (100 / (this.props.settingsClone[1].duration * 60 * 60))
+                (100 / (this.props.settingsClone[1].duration * 60))
           )
         });
         // if (this.state.currentPercentage >= 100) {
@@ -418,21 +454,18 @@ export default class Player extends React.Component {
         <View style={styles.layerTop}>
           <Text style={styles.title}>{this.state.currentSong.name}</Text>
           <Text style={styles.titleSmall}>
-            now {this.state.playing ? "playing" : "paused"}
+            {this.state.stopped
+              ? "stopped"
+              : this.state.playing
+                ? "playing"
+                : "paused"}
           </Text>
-          {/*<Icon*/}
-          {/*name="stopwatch"*/}
-          {/*type="entypo"*/}
-          {/*color={this.props.settingsClone[1].value ? "#00ffd1" : "#fff"}*/}
-          {/*onPress={() => this.props.storeSettings("autoStop")}*/}
-          {/*underlayColor={"rgba(0,0,0,0)"}*/}
-          {/*/>*/}
         </View>
         <PlayButton
           currentSong={this.state.currentSong}
           play={this.play.bind(this)}
           playing={this.state.playing}
-          percentage={this.state.currentPercentage}
+          percentage={this.props.settingsClone[1].value ? this.state.currentPercentage : 0}
           spinValue={this.state.spinValue}
           storeSettings={data => this.props.storeSettings(data)}
           setNumberOfLoops={() => this.setNumberOfLoops()}
@@ -443,7 +476,7 @@ export default class Player extends React.Component {
           {!this.props.settingsClone[1].value
             ? "--:--"
             : fancyTimeFormat(
-                this.props.settingsClone[1].duration * 60 * 60 -
+                this.props.settingsClone[1].duration * 60 -
                   this.state.tickNumber
               )}
         </Text>
@@ -507,7 +540,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     textAlign: "center",
     top: 0,
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: "500"
   },
   player: {
