@@ -5,11 +5,10 @@ import {
   Easing,
   StyleSheet,
   View,
-  Text
+  Text,
 } from "react-native";
 import Sound from "react-native-sound";
-// Enable playback in silence mode
-// Sound.setCategory("Playback");
+import PropTypes from 'prop-types';
 import PlayList from "./player/PlayList";
 import PlayButton from "./player/PlayButton";
 import { defaultCurrent, defaultFavorite, songs } from "../config";
@@ -50,7 +49,7 @@ export default class Player extends React.Component {
       RNSoundLevel.onNewFrame = data => {
         // see "Returned data" section below
         console.log("Sound level info", data);
-        if (data.value > -5 && !this.state.playing) {
+        if (data.value > -10 && !this.state.playing) {
           this.play(this.state.currentSong);
         }
       };
@@ -557,3 +556,9 @@ const styles = StyleSheet.create({
     paddingTop: 20
   }
 });
+
+Player.propTypes = {
+    settingsClone:PropTypes.array.isRequired,
+    storeSettings:PropTypes.func.isRequired,
+    storeSliderSettings:PropTypes.func.isRequired
+};
