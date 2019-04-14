@@ -5,10 +5,10 @@ import {
   Easing,
   StyleSheet,
   View,
-  Text,
+  Text
 } from "react-native";
 import Sound from "react-native-sound";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import PlayList from "./player/PlayList";
 import PlayButton from "./player/PlayButton";
 import { defaultCurrent, defaultFavorite, songs } from "../config";
@@ -76,20 +76,25 @@ export default class Player extends React.Component {
       this.totalStop();
     }
 
-    if(this.props.settingsClone[1].duration !== this.state.previousDurationValue){
-        this.setNumberOfLoops()
+    if (
+      this.props.settingsClone[1].duration !== this.state.previousDurationValue
+    ) {
+      this.setNumberOfLoops();
     }
 
-    if(this.props.settingsClone[1].value && this.state.secondsLeftAfterNextLoop < 0) {
-        console.log('wrong, stop everything')
-        // this.setState({
-        //     // TODO - move value to constants
-        //     secondsLeftAfterNextLoop: 0
-        // })
-        // this.setNumberOfLoops()
-        this.resetLoopCounters()
-        this.totalStop()
-      }
+    if (
+      this.props.settingsClone[1].value &&
+      this.state.secondsLeftAfterNextLoop < 0
+    ) {
+      console.log("wrong, stop everything");
+      // this.setState({
+      //     // TODO - move value to constants
+      //     secondsLeftAfterNextLoop: 0
+      // })
+      // this.setNumberOfLoops()
+      this.resetLoopCounters();
+      this.totalStop();
+    }
   }
 
   componentDidMount() {
@@ -236,7 +241,7 @@ export default class Player extends React.Component {
     this.state.sound.pause();
     this.setState({
       playing: false,
-        stopped: false,
+      stopped: false,
       paused: true
     });
     clearInterval(this.state.tickInterval);
@@ -456,15 +461,17 @@ export default class Player extends React.Component {
             {this.state.stopped
               ? "stopped"
               : this.state.playing
-                ? "playing"
-                : "paused"}
+              ? "playing"
+              : "paused"}
           </Text>
         </View>
         <PlayButton
           currentSong={this.state.currentSong}
           play={this.play.bind(this)}
           playing={this.state.playing}
-          percentage={this.props.settingsClone[1].value ? this.state.currentPercentage : 0}
+          percentage={
+            this.props.settingsClone[1].value ? this.state.currentPercentage : 0
+          }
           spinValue={this.state.spinValue}
           storeSettings={data => this.props.storeSettings(data)}
           setNumberOfLoops={() => this.setNumberOfLoops()}
@@ -558,7 +565,7 @@ const styles = StyleSheet.create({
 });
 
 Player.propTypes = {
-    settingsClone:PropTypes.array.isRequired,
-    storeSettings:PropTypes.func.isRequired,
-    storeSliderSettings:PropTypes.func.isRequired
+  settingsClone: PropTypes.array.isRequired,
+  storeSettings: PropTypes.func.isRequired,
+  storeSliderSettings: PropTypes.func.isRequired
 };
