@@ -1,9 +1,9 @@
-import React from "react";
-import { StyleSheet, View, ImageBackground, AsyncStorage } from "react-native";
-import LinearGradient from "react-native-linear-gradient";
-import Mountain from "../assets/images/mountain.jpeg";
-import Player from "./Player";
-import BottomNavigation from "./BottomNavigation";
+import React from 'react';
+import { StyleSheet, View, ImageBackground, AsyncStorage } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import Mountain from '../assets/images/mountain.jpeg';
+import Player from './Player';
+import BottomNavigation from './BottomNavigation';
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -17,7 +17,7 @@ export default class Home extends React.Component {
         <ImageBackground source={Mountain} style={styles.backgroundImage}>
           <View style={styles.container}>
             <LinearGradient
-              colors={["rgba(3, 218, 198, 0.8)", "rgba(98, 0, 238, 0.5)"]}
+              colors={['rgba(3, 218, 198, 0.8)', 'rgba(98, 0, 238, 0.5)']}
               start={{ x: 0, y: 0.1 }}
               end={{ x: 0.1, y: 1.0 }}
               locations={[0, 1]}
@@ -26,12 +26,8 @@ export default class Home extends React.Component {
               <Player
                 style={styles.player}
                 settingsClone={this.props.screenProps.settingsClone}
-                storeSettings={data =>
-                  this.props.screenProps.storeSettings(data)
-                }
-                storeSliderSettings={data =>
-                  this.props.screenProps.storeSliderSettings(data)
-                }
+                storeSettings={(data) => this.props.screenProps.storeSettings(data)}
+                storeSliderSettings={(data) => this.props.screenProps.storeSliderSettings(data)}
               />
               <BottomNavigation routes={this.props.navigation} />
             </LinearGradient>
@@ -44,44 +40,44 @@ export default class Home extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    display: "flex",
+    display: 'flex',
     flex: 1,
-    height: "100%",
-    alignItems: "center",
-    alignContent: "center",
-    justifyContent: "center",
-    flexDirection: "row",
+    height: '100%',
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
     zIndex: 1
   },
   main: {
-    height: "100%"
+    height: '100%'
   },
   backgroundImage: {
     flex: 1,
-    backgroundColor: "transparent",
-    alignItems: "center",
-    width: "100%",
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+    width: '100%',
     zIndex: 0,
-    alignSelf: "center",
-    justifyContent: "space-between"
+    alignSelf: 'center',
+    justifyContent: 'space-between'
   },
   linearGradient: {
     flex: 1,
-    width: "100%",
+    width: '100%',
     zIndex: 0,
-    position: "absolute",
-    height: "100%",
-    alignSelf: "stretch",
-    alignItems: "center"
+    position: 'absolute',
+    height: '100%',
+    alignSelf: 'stretch',
+    alignItems: 'center'
   },
   textStyle: {
-    color: "#fff",
+    color: '#fff',
     zIndex: 1,
-    display: "flex",
-    alignItems: "center",
-    alignContent: "center",
-    justifyContent: "center",
-    textAlign: "center",
+    display: 'flex',
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
     top: 3
   }
 });

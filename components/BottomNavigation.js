@@ -1,7 +1,7 @@
-import React from "react";
-import { StyleSheet, View } from "react-native";
-import { Icon } from "react-native-elements";
-import { constants } from "../helpers/const";
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import { Icon } from 'react-native-elements';
+import { constants } from '../helpers/const';
 
 export default class BottomNavigator extends React.Component {
   constructor(props) {
@@ -11,32 +11,30 @@ export default class BottomNavigator extends React.Component {
     };
   }
 
-  changeRoute = route => {
+  changeRoute = (route) => {
     this.props.routes.navigate(route);
   };
   render() {
     return (
       <View style={styles.navigation}>
         <Icon
-          onPress={() => this.changeRoute("Home")}
+          onPress={() => this.changeRoute('Home')}
           name="home"
-          color={this.state.active === "Home" ? "#00ffbf" : "#ffffff"}
-          underlayColor={"rgba(0,0,0,0)"}
+          color={this.state.active === 'Home' ? '#00ffbf' : '#ffffff'}
+          underlayColor={'rgba(0,0,0,0)'}
         />
         <Icon
-          onPress={() => this.changeRoute("Settings")}
+          onPress={() => this.changeRoute('Settings')}
           name="settings"
-          color={this.state.active === "Settings" ? "#00ffbf" : "#ffffff"}
-          underlayColor={"rgba(0,0,0,0)"}
+          color={this.state.active === 'Settings' ? '#00ffbf' : '#ffffff'}
+          underlayColor={'rgba(0,0,0,0)'}
         />
         <Icon
-          onPress={() => this.changeRoute("InfoMenu")}
+          onPress={() => this.changeRoute('InfoMenu')}
           name="info-circle"
           type="font-awesome"
-          color={
-            this.state.active === "InfoMenu" ? constants.mainColor : "#ffffff"
-          }
-          underlayColor={"rgba(0,0,0,0)"}
+          color={this.state.active === 'InfoMenu' ? constants.mainColor : '#ffffff'}
+          underlayColor={'rgba(0,0,0,0)'}
         />
       </View>
     );
@@ -45,9 +43,9 @@ export default class BottomNavigator extends React.Component {
 
 const styles = StyleSheet.create({
   navigation: {
-    flexDirection: "row",
-    width: "100%",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'space-between',
     marginTop: 10,
     paddingLeft: 50,
     paddingRight: 50,
